@@ -35,9 +35,9 @@ public class AutoRed2OpMode extends BaseAutoOpMode {
 
         robot.arm.moveArmToLevel(2);
         sleep(500);
-        robot.arm.openBucketPos();
+       // robot.arm.openBucketPos();
         sleep(1000);
-        robot.arm.closeBucketPos();
+        //robot.arm.closeBucketPos();
         sleep(500);
         robot.arm.moveArmToLevel(0);
         telemetry.addData(name, " Dropped the freight ");
@@ -47,7 +47,7 @@ public class AutoRed2OpMode extends BaseAutoOpMode {
         driveForwardByInches(2, robot, DejaVuBot.TPS);
         strafeDirection(robot, false, 920);
 
-        robot.arm.closeBucketPos();
+        //robot.arm.closeBucketPos();
         //robot.intake();
         driveForwardByInches(45, robot, DejaVuBot.TPS);
         strafeDirection(robot, true, 500);

@@ -128,28 +128,8 @@ public class BaseAutoOpMode extends LinearOpMode {
         robot.setPowerToAllMotors(0);
     }
 
-    public void spinForOneDuck(DejaVuBot bot, boolean clockwise) {
-        bot.duckSpinner.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        if(!clockwise)
-            bot.duckSpinner.setDirection(DcMotorEx.Direction.FORWARD);
-        else
-            bot.duckSpinner.setDirection(DcMotorEx.Direction.REVERSE);
 
-        bot.duckSpinner.setTargetPosition(DejaVuBot.ONE_DUCK_SPIN_TARGET_LENGTH);
-        bot.duckSpinner.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        bot.duckSpinner.setVelocity(DejaVuBot.TPS);
 
-        telemetry.addData(" target :",bot.duckSpinner.getTargetPosition());
-        telemetry.update();
-
-        while (opModeIsActive() && bot.duckSpinner.isBusy()) {
-            telemetry.addData(" bot needs to move inches  :",DejaVuBot.ONE_DUCK_SPIN_TARGET_LENGTH);
-            telemetry.addData(" spinner position =", bot.duckSpinner.getCurrentPosition());
-            telemetry.update();
-        }
-        //Stop the motor
-        bot.duckSpinner.setPower(0);
-    }
     public void strafeDirection(DejaVuBot bot, boolean left, int milliseconds) {
         bot.setModeForAllMotors(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         if(left) {

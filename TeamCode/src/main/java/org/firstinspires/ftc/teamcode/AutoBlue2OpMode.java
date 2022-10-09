@@ -36,9 +36,9 @@ public class AutoBlue2OpMode extends BaseAutoOpMode {
 
         robot.arm.moveArmToLevel(2);
         sleep(500);
-        robot.arm.openBucketPos();
+        //robot.arm.openBucketPos();
         sleep(1000);
-        robot.arm.closeBucketPos();
+        //robot.arm.closeBucketPos();
         sleep(500);
         robot.arm.moveArmToLevel(0);
         telemetry.addData(name, " Dropped the freight ");

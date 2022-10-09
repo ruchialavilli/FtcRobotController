@@ -46,11 +46,8 @@ public class DejaVuBot {
     public DcMotorEx rightFrontMotor;
     public DcMotorEx leftBackMotor;
     public DcMotorEx rightBackMotor;
-    public DcMotorEx duckSpinner;
-    public DcMotorEx intakeMotor;
     public BNO055IMU imu;
-    public DcMotorEx armMotor;
-    public Servo bucketServo;
+
 
     public DejaVuArm arm = null;
 
@@ -58,12 +55,11 @@ public class DejaVuBot {
     /* local OpMode members. */
     HardwareMap hwMap = null;
     private ElapsedTime period = new ElapsedTime();
-    public double DUCK_SPIN_POWER = 0.55;
+
 
     //motor constants for auton calculations
     static final double WHEEL_CIRCUMFERENCE_MM = 96 * Math.PI;
-    static final int CAROUSAL_DIAMETER_INCHES = 15;
-    static final int ONE_DUCK_SPIN_TARGET_LENGTH = (int) (2.15 *( Math.PI * CAROUSAL_DIAMETER_INCHES * DejaVuBot.COUNT_PER_INCH));
+
 
     static final double COUNTS_PER_MOTOR_REV = 28.0;
     static final double DRIVE_GEAR_REDUCTION = 16.25;
@@ -76,7 +72,6 @@ public class DejaVuBot {
     //max rpm for our motors are 338, here we're using 175 rpm
     public static double TPS = (double) ((185/60) * COUNTS_PER_WHEEL_REV);
 
-    public double INTAKE_MOTOR_SPEED = 1.0;
 
     /* Constructor */
     public DejaVuBot() {
@@ -94,10 +89,9 @@ public class DejaVuBot {
         rightFrontMotor = hwMap.get(DcMotorEx.class, "rightFront");
         leftBackMotor = hwMap.get(DcMotorEx.class, "leftBack");
         rightBackMotor = hwMap.get(DcMotorEx.class, "rightBack");
-        intakeMotor = hwMap.get(DcMotorEx.class, "intakeMotor");
+
 
         //Initialize the arm and duck spinner
-        duckSpinner = hwMap.get(DcMotorEx.class, "duckSpinner");
         arm = new DejaVuArm();
         arm.init(hwMap, isAuton);
         stopRobot();
@@ -108,8 +102,7 @@ public class DejaVuBot {
         rightFrontMotor.setDirection(DcMotorEx.Direction.REVERSE);
         leftBackMotor.setDirection(DcMotorEx.Direction.FORWARD);
         rightBackMotor.setDirection(DcMotorEx.Direction.REVERSE);
-        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        intakeMotor.setPower(0.0);
+
     }
     public void gyroInit() {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -178,43 +171,7 @@ public class DejaVuBot {
         leftBackMotor.setPower(turnSpeed);
     }
 
-    public void spinAntiClockWise() {
-        if (duckSpinner != null) {
-            duckSpinner.setDirection(DcMotorEx.Direction.FORWARD);
-            duckSpinner.setPower(DUCK_SPIN_POWER);
-        }
-    }
-    public void stopSpinner() {
-        if (duckSpinner != null) {
-            duckSpinner.setPower(0);
-        }
-    }
 
-    public void spinClockWise() {
-        if (duckSpinner != null) {
-            duckSpinner.setDirection(DcMotorEx.Direction.REVERSE);
-            duckSpinner.setPower(DUCK_SPIN_POWER);
-        }
-    }
-    public void spinDuck() {
-        duckSpinner.setPower(DUCK_SPIN_POWER);
-    }
-    //will be used if we have time
-    public void scanLevel() {
-
-    }
-
-    //will be used based on hardware team strategy
-    public void intake() {
-        if (intakeMotor != null) {
-            intakeMotor.setPower(-INTAKE_MOTOR_SPEED);
-        }
-    }
-    public void stopIntake() {
-        if (intakeMotor != null) {
-            intakeMotor.setPower(0);
-        }
-    }
     public void setMotorPower(double lF, double rF, double lB, double rB){
         leftFrontMotor.setPower(lF);
         leftBackMotor.setPower(lB);

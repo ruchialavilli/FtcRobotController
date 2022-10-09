@@ -19,7 +19,7 @@ public class AutoBlue2VisionOpMode extends BaseAutoVisionOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap, true);
-        robot.arm.closeBucketPos();
+
         currentLevel = -1;
         redFlag = true;
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
@@ -59,9 +59,9 @@ public class AutoBlue2VisionOpMode extends BaseAutoVisionOpMode {
 
         robot.arm.moveArmToLevel(currentLevel);
         sleep(500);
-        robot.arm.openBucketPos();
+        //robot.arm.openBucketPos();
         sleep(1000);
-        robot.arm.closeBucketPos();
+        //robot.arm.closeBucketPos();
         sleep(1000);
         robot.arm.moveArmToLevel(0);
         telemetry.addData(TAG, " Dropped the freight ");
@@ -73,7 +73,7 @@ public class AutoBlue2VisionOpMode extends BaseAutoVisionOpMode {
 
         strafeDirection(robot, true, 1424);
 
-        robot.arm.closeBucketPos();
+
         //robot.intake();
         driveForwardByInches(45, robot, DejaVuBot.TPS);
         sleep(500);

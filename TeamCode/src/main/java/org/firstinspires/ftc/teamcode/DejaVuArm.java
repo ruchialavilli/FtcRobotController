@@ -12,8 +12,6 @@ import java.util.Hashtable;
 public class DejaVuArm {
     /* Public OpMode members. */
     public DcMotorEx armMotor = null;
-    public Servo bucketServo = null;
-    public DcMotorEx intakeMotor = null;
     static final double PULSES_PER_REVOLUTION = 751.8;
     public static final int TOP_LEVEL=2;
     public static final int MID_LEVEL=1;
@@ -44,9 +42,6 @@ public class DejaVuArm {
         this.hwMap = hMap;
         this.armMotor = hwMap.get(DcMotorEx.class, "armMotor");
         armMotor.setDirection(DcMotorEx.Direction.FORWARD);
-        this.bucketServo = hwMap.get(Servo.class, "bucketServo");
-        bucketServo.setDirection(Servo.Direction.FORWARD);
-        this.closeBucketPos();
         this.moveArmToLevel(0);
         this.currentLevel = 0;
     }
@@ -78,14 +73,8 @@ public class DejaVuArm {
             currentLevel = level;
         }
     }
-    public void openBucketPos() {
-        bucketServo.setPosition(0.113);
-    }
 
-    public void closeBucketPos() {
-        bucketServo.setPosition(0.875);
-    }
-    public void resetArmMotor() { armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);}
+
 
 }
 

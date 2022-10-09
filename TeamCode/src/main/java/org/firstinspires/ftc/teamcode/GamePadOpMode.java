@@ -24,8 +24,7 @@ public class GamePadOpMode extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap,false);
         robot.chassisEncoderOff();
-        robot.arm.closeBucketPos();
-        robot.arm.moveArmToLevel(0);
+        //robot.arm.moveArmToLevel(0);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready for gamepad run");
         telemetry.update();
@@ -101,7 +100,7 @@ public class GamePadOpMode extends LinearOpMode {
         public void run() {
 
             while (opModeIsActive()) {
-
+/*
                 if (gamepad2.y) {
                     telemetry.addData("GP2 Input", "Y");
                     robot.arm.moveArmToLevel(2);
@@ -116,43 +115,10 @@ public class GamePadOpMode extends LinearOpMode {
                     //telemetry.addData("Input", "Unknown Ignoring");
                 }
 
-                if (gamepad2.left_bumper) {
-                    if (gamepad2.b) {
-                        robot.duckSpinner.setDirection(DcMotorEx.Direction.REVERSE);
-                    } else {
-                        robot.duckSpinner.setDirection(DcMotorEx.Direction.FORWARD);
-                    }
-                    robot.spinDuck();
-
-                }
-
-                if (gamepad2.left_trigger > 0.5) {
-                    robot.stopSpinner();
-                }
-
-                if (gamepad2.right_bumper) {
-                    if (gamepad2.b) {
-                        robot.intakeMotor.setDirection(DcMotorEx.Direction.REVERSE);
-                    } else {
-                        robot.intakeMotor.setDirection(DcMotorEx.Direction.FORWARD);
-                    }
-                    robot.intake();
-                }
-
-                if (gamepad2.right_trigger > 0.5) {
-                    robot.stopIntake();
-                }
-
-                if (gamepad2.dpad_down) {
-                    robot.arm.bucketServo.setPosition(0.875);
-                }
-
-                if (gamepad2.dpad_up) {
-                    robot.arm.bucketServo.setPosition(0.113);
-                }
+  */
                 telemetry.addData("GP2 Status", "Completed");
                 telemetry.addData("GP2 armMotor encoder value", robot.arm.armMotor.getCurrentPosition());
-                telemetry.addData("GP2 servo Position", robot.arm.bucketServo.getPosition());
+                //telemetry.addData("GP2 servo Position", robot.arm.bucketServo.getPosition());
                 telemetry.addData("GP2 GamePadOpMode", "Leg 1: %2.5f S Elapsed", runtime.seconds());
                 telemetry.update();
             } //end of while loop

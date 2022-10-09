@@ -30,7 +30,6 @@ public class AutoRed1OpMode extends BaseAutoOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap, true);
-        robot.arm.closeBucketPos();
         // Send telemetry message to signify robot waiting;
         telemetry.addData(name, " Robot ready for run");
         telemetry.update();
@@ -49,9 +48,9 @@ public class AutoRed1OpMode extends BaseAutoOpMode {
         //Drop the piece here and reset the arm to initial position
         robot.arm.moveArmToLevel(2);
         sleep(500);
-        robot.arm.bucketServo.setPosition(0.113);
+
         sleep(1000);
-        robot.arm.bucketServo.setPosition(0.875);
+
         sleep(500);
         robot.arm.moveArmToLevel(0);
         telemetry.addData(name, " Dropped the freight ");
@@ -68,7 +67,6 @@ public class AutoRed1OpMode extends BaseAutoOpMode {
         turnToPID(50, robot);
         //f
         driveForwardByInches(-3/2, robot, DejaVuBot.TPS/2);
-        spinForOneDuck(robot, true);
         turnToPID(-40,robot);
         //changed from 50 -> 60
         //changed from 55->40 2/2/22
