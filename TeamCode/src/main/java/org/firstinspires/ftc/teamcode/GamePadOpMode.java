@@ -62,8 +62,8 @@ public class GamePadOpMode extends LinearOpMode {
             double turn;
 
             while (opModeIsActive()) {
-                drive = -gamepad1.left_stick_y;
-                turn = gamepad1.right_stick_x;
+                drive = gamepad1.left_stick_y;
+                turn = -gamepad1.right_stick_x;
                 leftPower = Range.clip(drive + turn, -1.0, 1.0);
                 rightPower = Range.clip(drive - turn, -1.0, 1.0);
 
