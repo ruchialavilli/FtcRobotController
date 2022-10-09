@@ -24,7 +24,7 @@ public class GamePadOpMode extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap,false);
         robot.chassisEncoderOff();
-        //robot.arm.moveArmToLevel(0);
+        robot.arm.moveArmToLevel(0);
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Ready for gamepad run");
         telemetry.update();
@@ -100,22 +100,24 @@ public class GamePadOpMode extends LinearOpMode {
         public void run() {
 
             while (opModeIsActive()) {
-/*
+
                 if (gamepad2.y) {
                     telemetry.addData("GP2 Input", "Y");
-                    robot.arm.moveArmToLevel(2);
-
+                    robot.arm.moveArmToLevel(3);
                 } else if (gamepad2.x) {
                     telemetry.addData("GP2 Input", "X");
+                    robot.arm.moveArmToLevel(2);
+                } else if (gamepad2.b) {
+                    telemetry.addData("GP2 Input", "B");
                     robot.arm.moveArmToLevel(1);
-                } else if (gamepad2.a) {
+                }else if (gamepad2.a) {
                     telemetry.addData("GP2 Input", "A");
                     robot.arm.moveArmToLevel(0);
                 } else {
-                    //telemetry.addData("Input", "Unknown Ignoring");
+                    telemetry.addData("Input", "Unknown Ignoring");
                 }
 
-  */
+
                 telemetry.addData("GP2 Status", "Completed");
                 telemetry.addData("GP2 armMotor encoder value", robot.arm.armMotor.getCurrentPosition());
                 //telemetry.addData("GP2 servo Position", robot.arm.bucketServo.getPosition());
