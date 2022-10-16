@@ -6,6 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import java.util.HashMap;
 import java.util.Hashtable;
 
@@ -17,6 +20,7 @@ public class DejaVuArm {
     public static final int MID_LEVEL=2;
     public static final int BOTTOM_LEVEL=1;
     public static final int GROUND_LEVEL=0;
+    private Telemetry telemetry;
 
     //max rpm for our arm motor is 1,850, here we're using 1750 rpm
     public static double SLIDER_TPS = 5000.0; //5959.5 MAX
@@ -50,32 +54,60 @@ public class DejaVuArm {
 
     public void moveArmToLevel(int level) {
 
+        sendToTelemetry("moveArmToLevel:" + level);
         if(level != currentLevel) {
-            
-            int l = level_map.get(level);
-            armMotor.setTargetPosition(l);
-
+            //GO ONE LEVEL DOWN AT FULL speed\
+            int height = level_map.get(level);
+            //checking if going up
+            sendToTelemetry("currentPosition:" + armMotor.getCurrentPosition());
+            sendToTelemetry("setting to height:" + height);
+            armMotor.setTargetPosition(height);
+            //setting the armMotor's target
+            sendToTelemetry("starting motor");
             this.armMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
             while (armMotor.isBusy()) {
                 armMotor.setVelocity(SLIDER_TPS);
+                armMotor.setPower(1);
+                sendToTelemetry("busy busy");
             }
+            sendToTelemetry("motor completed");
+            //motor done/break
+            sendToTelemetry("Applying Brakes!");
             armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-            armMotor.setPower(0);
-            if (armMotor.getCurrentPosition() != level_map.get(level)) {
-                armMotor.setTargetPosition(level_map.get(level));
-                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                while (armMotor.isBusy()) {
-                    armMotor.setVelocity(SLIDER_TPS/4);
-                }
-                armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-                armMotor.setPower(0);
-            }
+            sendToTelemetry("turning off motor power");
+//            armMotor.setPower(0);
+
+
+//          // this is to auto-correct if we went beyond the level we need to go - MIGHT NOT NEED IT
+//            if (armMotor.getCurrentPosition() != level_map.get(level)) {
+//                armMotor.setTargetPosition(level_map.get(level));
+//                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                while (armMotor.isBusy()) {
+//                    armMotor.setVelocity(SLIDER_TPS/4);
+//                }
+//                armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+//                armMotor.setPower(0);
+//            }
             currentLevel = level;
+        } else {
+            sendToTelemetry("already at level:" + level);
         }
     }
 
+    public void setTelemetry(Telemetry telemetry) {
+        this.telemetry = telemetry;
+    }
 
-
+    private void sendToTelemetry(String msg){
+        if(telemetry != null){
+            telemetry.addData("DejaVuArm", msg);
+            telemetry.update();
+//            try {
+//                sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+        }
+    }
 }
 
