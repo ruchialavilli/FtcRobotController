@@ -5,6 +5,8 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -68,9 +70,9 @@ public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDrive mecanumDrive = new SampleMecanumDrive(hardwareMap);
 
-        if (!(drive.getLocalizer() instanceof StandardTrackingWheelLocalizer)) {
+        if (!(mecanumDrive.getLocalizer() instanceof StandardTrackingWheelLocalizer)) {
             RobotLog.setGlobalErrorMsg("StandardTrackingWheelLocalizer is not being set in the "
                     + "drive class. Ensure that \"setLocalizer(new StandardTrackingWheelLocalizer"
                     + "(hardwareMap));\" is called in SampleMecanumDrive.java");
@@ -95,13 +97,33 @@ public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
 
         boolean tuningFinished = false;
 
+        double leftPower, rightPower;
+        double drive;
+        double turn;
         while (!isStopRequested() && !tuningFinished) {
-            Pose2d vel = new Pose2d(0, 0, -gamepad1.right_stick_x);
-            drive.setDrivePower(vel);
+            //Pose2d vel = new Pose2d(0, 0, -gamepad1.right_stick_x);
+            //drive.setDrivePower(vel);
 
-            drive.update();
+            drive = gamepad1.left_stick_y;
+            turn = -gamepad1.right_stick_x;
+            leftPower = Range.clip(drive + turn, -1.0, 1.0);
+            rightPower = Range.clip(drive - turn, -1.0, 1.0);
 
-            double heading = drive.getPoseEstimate().getHeading();
+            if (gamepad1.left_trigger > 0.5) {
+                leftPower = leftPower / 4;
+                rightPower = rightPower / 4;
+            }
+            if (gamepad1.left_bumper) {
+                mecanumDrive.setMotorPowers(0.3, 0.3, 0.3, 0.3);// - -
+            } else if (gamepad1.right_bumper) {
+                mecanumDrive.setMotorPowers(-0.3, -0.3, -0.3, -0.3); //- -
+            } else {
+                mecanumDrive.setMotorPowers(leftPower, rightPower, leftPower, rightPower);
+            }
+
+            mecanumDrive.update();
+
+            double heading = mecanumDrive.getPoseEstimate().getHeading();
             double deltaHeading = heading - lastHeading;
 
             headingAccumulator += Angle.normDelta(deltaHeading);

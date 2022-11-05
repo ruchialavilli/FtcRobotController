@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
  */
 @TeleOp(group = "drive")
 public class LocalizationTest extends LinearOpMode {
-    @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
@@ -27,17 +26,17 @@ public class LocalizationTest extends LinearOpMode {
         while (!isStopRequested()) {
             drive.setWeightedDrivePower(
                     new Pose2d(
-                            -gamepad1.left_stick_y,
+                            gamepad1.left_stick_y,
                             -gamepad1.left_stick_x,
-                            -gamepad1.right_stick_x
+                            -gamepad1.right_stick_y
                     )
             );
 
             drive.update();
 
             Pose2d poseEstimate = drive.getPoseEstimate();
-            telemetry.addData("x", poseEstimate.getX());
-            telemetry.addData("y", poseEstimate.getY());
+            telemetry.addData("x", poseEstimate.getY());// remember that X and Y are reversed for us...
+            telemetry.addData("y", poseEstimate.getX());
             telemetry.addData("heading", poseEstimate.getHeading());
             telemetry.update();
         }

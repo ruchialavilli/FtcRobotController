@@ -16,9 +16,10 @@ public class DejaVuArm {
     /* Public OpMode members. */
     public DcMotorEx armMotor = null;
     static final double PULSES_PER_REVOLUTION = 751.8;
-    public static final int TOP_LEVEL=3;
-    public static final int MID_LEVEL=2;
-    public static final int BOTTOM_LEVEL=1;
+    public static final int TOP_LEVEL=4;
+    public static final int MID_LEVEL=3;
+    public static final int BOTTOM_LEVEL=2;
+    public static final int LOAD_LEVEL=1;
     public static final int GROUND_LEVEL=0;
     private Telemetry telemetry;
 
@@ -27,9 +28,11 @@ public class DejaVuArm {
     static HashMap<Integer, Integer> level_map = new HashMap<>();
     {
         level_map.put(0, 0);//ground
-        level_map.put(1, 350);//16 inches
-        level_map.put(2, 1350);//26 inches
-        level_map.put(3, 2350);//36 inches
+        level_map.put(1, 0);// aim for 10 inches???
+        level_map.put(2, 350);//16 inches
+        level_map.put(3, 1350);//26 inches
+        level_map.put(4, 2350);//36 inches
+
         //100 = 1 inch
 
     }
@@ -38,6 +41,7 @@ public class DejaVuArm {
     public int armMotorBasePos;
     private boolean isAuton;
     private HardwareMap hwMap = null;
+
 
     public DejaVuArm() {    }
 
@@ -93,6 +97,8 @@ public class DejaVuArm {
             sendToTelemetry("already at level:" + level);
         }
     }
+
+
 
     public void setTelemetry(Telemetry telemetry) {
         this.telemetry = telemetry;

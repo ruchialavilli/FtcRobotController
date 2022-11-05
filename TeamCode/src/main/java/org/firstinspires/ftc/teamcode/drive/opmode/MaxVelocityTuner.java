@@ -54,7 +54,7 @@ public class MaxVelocityTuner extends LinearOpMode {
         telemetry.clearAll();
         telemetry.update();
 
-        drive.setDrivePower(new Pose2d(1, 0, 0));
+        drive.setDrivePower(new Pose2d(-1, 0, 0));//again, x reversed
         timer = new ElapsedTime();
 
         while (!isStopRequested() && timer.seconds() < RUNTIME) {
