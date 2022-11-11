@@ -115,14 +115,21 @@ public class GamePadOpMode extends LinearOpMode {
                     telemetry.addData("GP2 Input", "A");
                     telemetry.addData("GP2 Input level", "1 - Picking Up");
                     robot.arm.moveArmToLevel(1);
-                }else if(gamepad2.dpad_down){
-                    telemetry.addData("GP2 Input", "Dpad");
+                }else if(gamepad2.right_bumper){
+                    telemetry.addData("GP2 Input", "Right Bumper");
                     telemetry.addData("GP2 Input level", "0 - Home");
                     robot.arm.moveArmToLevel(0);
                 }else {
                     telemetry.addData("GP2 Input", "Unknown Ignoring");
                 }
 
+                if (gamepad2.dpad_down) {
+                    robot.arm.closePos();
+                }
+
+                if (gamepad2.dpad_up) {
+                    robot.arm.openPos();
+                }
 
 //                telemetry.addData("GP2 Status", "Completed");
 //                telemetry.addData("GP2 armMotor encoder value", robot.arm.armMotor.getCurrentPosition());

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -15,6 +16,7 @@ import java.util.Hashtable;
 public class DejaVuArm {
     /* Public OpMode members. */
     public DcMotorEx armMotor = null;
+    public Servo gripperServo = null;
     static final double PULSES_PER_REVOLUTION = 751.8;
     public static final int TOP_LEVEL=4;
     public static final int MID_LEVEL=3;
@@ -22,16 +24,18 @@ public class DejaVuArm {
     public static final int LOAD_LEVEL=1;
     public static final int GROUND_LEVEL=0;
     private Telemetry telemetry;
+    double zeroPosServo;
+    double  MIN_POSITION = 0, MAX_POSITION = 1;
 
     //max rpm for our arm motor is 1,850, here we're using 1750 rpm
-    public static double SLIDER_TPS = 5000.0; //5959.5 MAX
+    public static double SLIDER_TPS = 1700.0; //5959.5 MAX
     static HashMap<Integer, Integer> level_map = new HashMap<>();
     {
         level_map.put(0, 0);//ground
-        level_map.put(1, 0);// aim for 10 inches???
-        level_map.put(2, 350);//16 inches
-        level_map.put(3, 1350);//26 inches
-        level_map.put(4, 2350);//36 inches
+        level_map.put(1, 350);//5 inches off the ground
+        level_map.put(2, 1250);//16 inches
+        level_map.put(3, 1350);// to be 26 inches
+        level_map.put(4, 2350);//to be 36 inches
 
         //100 = 1 inch
 
@@ -51,6 +55,10 @@ public class DejaVuArm {
         this.hwMap = hMap;
         this.armMotor = hwMap.get(DcMotorEx.class, "armMotor");
         armMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        this.gripperServo = hwMap.get(Servo.class, "gripperServo");
+        gripperServo.resetDeviceConfigurationForOpMode();
+        double zeroPosServo = gripperServo.getPosition();
+        //this.openPos();
         this.moveArmToLevel(0);
         this.currentLevel = 0;
     }
@@ -96,6 +104,32 @@ public class DejaVuArm {
         } else {
             sendToTelemetry("already at level:" + level);
         }
+    }
+
+    // 0 - 300 degrees is 0 - 1
+    private static final double moveByPosition = 0.0025;
+    double gripPosition = MIN_POSITION;        // set grip to full open.
+    // drop the object
+    public void closePos() {
+        gripPosition = gripPosition - moveByPosition;
+        sendToTelemetry("Current Pos Servo:" + gripperServo.getPosition());
+        sendToTelemetry("Sending to Pos Servo:" + Range.clip(gripPosition, MIN_POSITION, MAX_POSITION) );
+        // always make sure we are going in reverse direction
+        gripperServo.setDirection(Servo.Direction.REVERSE);
+        gripperServo.setPosition(Range.clip(gripPosition, MIN_POSITION, MAX_POSITION));
+        sendToTelemetry("New Pos Servo:" + gripperServo.getPosition());
+    }
+
+    // pick up object
+    public void openPos() {
+        gripPosition = gripPosition + moveByPosition;
+        sendToTelemetry("Current Pos Servo:" + gripperServo.getPosition());
+        sendToTelemetry("Sending to Pos Servo:" + gripPosition);
+        // always make sure we are going in forward direction
+        gripperServo.setDirection(Servo.Direction.FORWARD);
+        gripperServo.setPosition(gripPosition);
+
+        sendToTelemetry("New Pos Servo:" + gripperServo.getPosition());
     }
 
 
