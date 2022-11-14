@@ -61,12 +61,14 @@ public class GamePadOpMode extends LinearOpMode {
             double leftPower, rightPower;
             double drive;
             double turn;
+            double turnPower;
 
             while (opModeIsActive()) {
                 drive = gamepad1.left_stick_y;
-                turn = -gamepad1.right_stick_x;
+                turn = -gamepad1.left_stick_x;
                 leftPower = Range.clip(drive + turn, -1.0, 1.0);
                 rightPower = Range.clip(drive - turn, -1.0, 1.0);
+                turnPower = Range.clip(-gamepad1.right_stick_x, -1.0, 1.0);
 
 //                telemetry.addData("GP1 drive set to:", "" + drive);
 //                telemetry.addData("GP1 turn set to:", "" + turn);
@@ -74,13 +76,12 @@ public class GamePadOpMode extends LinearOpMode {
                 if (gamepad1.left_trigger > 0.5) {
                     leftPower = leftPower / 4;
                     rightPower = rightPower / 4;
+                    turnPower = turnPower /4;
                 }
 
-                if (gamepad1.left_bumper) {
-                    robot.turnRobot(0.5);
-                } else if (gamepad1.right_bumper) {
-                    robot.turnRobot(-0.5);
-                } else {
+                if (gamepad1.right_stick_x != 0) {
+                    robot.turnRobot(turnPower);
+                }  else {
                     robot.leftFrontMotor.setPower(leftPower);
                     robot.rightFrontMotor.setPower(rightPower);
                     robot.rightBackMotor.setPower(leftPower);
@@ -130,6 +131,7 @@ public class GamePadOpMode extends LinearOpMode {
                 if (gamepad2.dpad_up) {
                     robot.arm.openPos();
                 }
+
 
 //                telemetry.addData("GP2 Status", "Completed");
 //                telemetry.addData("GP2 armMotor encoder value", robot.arm.armMotor.getCurrentPosition());

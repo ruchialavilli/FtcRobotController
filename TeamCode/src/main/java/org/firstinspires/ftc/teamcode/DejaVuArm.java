@@ -111,26 +111,19 @@ public class DejaVuArm {
     double gripPosition = MIN_POSITION;        // set grip to full open.
     // drop the object
     public void closePos() {
-        gripPosition = gripPosition - moveByPosition;
-        sendToTelemetry("Current Pos Servo:" + gripperServo.getPosition());
-        sendToTelemetry("Sending to Pos Servo:" + Range.clip(gripPosition, MIN_POSITION, MAX_POSITION) );
-        // always make sure we are going in reverse direction
-        gripperServo.setDirection(Servo.Direction.REVERSE);
-        gripperServo.setPosition(Range.clip(gripPosition, MIN_POSITION, MAX_POSITION));
-        sendToTelemetry("New Pos Servo:" + gripperServo.getPosition());
+        gripperServo.setDirection(Servo.Direction.FORWARD);
+        gripperServo.setPosition(0.95);
+        sendToTelemetry("Sending to Pos Servo:" + gripperServo.getPosition());
     }
 
     // pick up object
     public void openPos() {
-        gripPosition = gripPosition + moveByPosition;
-        sendToTelemetry("Current Pos Servo:" + gripperServo.getPosition());
-        sendToTelemetry("Sending to Pos Servo:" + gripPosition);
-        // always make sure we are going in forward direction
-        gripperServo.setDirection(Servo.Direction.FORWARD);
-        gripperServo.setPosition(gripPosition);
-
-        sendToTelemetry("New Pos Servo:" + gripperServo.getPosition());
+        gripperServo.setDirection(Servo.Direction.REVERSE);
+        gripperServo.setPosition(0.3);
+        sendToTelemetry("Sending to Pos Servo:" + gripperServo.getPosition());
     }
+
+
 
 
 
