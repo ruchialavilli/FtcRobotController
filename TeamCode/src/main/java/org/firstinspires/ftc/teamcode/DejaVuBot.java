@@ -37,6 +37,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
 
@@ -44,6 +46,7 @@ public class DejaVuBot {
     /* Public OpMode members. */
     public DcMotorEx leftFrontMotor;
     public DcMotorEx rightFrontMotor;
+    private Telemetry telemetry;
     public DcMotorEx leftBackMotor;
     public DcMotorEx rightBackMotor;
     public BNO055IMU imu;
@@ -177,5 +180,17 @@ public class DejaVuBot {
         leftBackMotor.setPower(lB);
         rightBackMotor.setPower(rB);
         rightFrontMotor.setPower(rF);
+    }
+
+    private void sendToTelemetry(String msg){
+        if(telemetry != null){
+            telemetry.addData("DejaVuArm", msg);
+            telemetry.update();
+//            try {
+//                sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+        }
     }
 }

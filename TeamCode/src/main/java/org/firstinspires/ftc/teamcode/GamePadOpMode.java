@@ -88,6 +88,7 @@ public class GamePadOpMode extends LinearOpMode {
                     robot.leftBackMotor.setPower(rightPower);
                 }
 
+
 //                telemetry.addData("GP1 Status", "Completed");
 //                telemetry.addData("GP1 Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
 //                telemetry.addData("GP1 GamePadOpMode", "Leg 1: %2.5f S Elapsed", runtime.seconds());
@@ -131,6 +132,7 @@ public class GamePadOpMode extends LinearOpMode {
                 if (gamepad2.dpad_up) {
                     robot.arm.openPos();
                 }
+
 
 
 //                telemetry.addData("GP2 Status", "Completed");
