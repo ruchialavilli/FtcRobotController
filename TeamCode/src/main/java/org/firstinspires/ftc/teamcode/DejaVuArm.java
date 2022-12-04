@@ -16,6 +16,8 @@ import java.util.Hashtable;
 public class DejaVuArm {
     /* Public OpMode members. */
     public DcMotorEx armMotor = null;
+    //public DcMotorEx spoolMotor = null;
+
     public Servo gripperServo = null;
     static final double PULSES_PER_REVOLUTION = 751.8;
     public static final int TOP_LEVEL=4;
@@ -54,7 +56,10 @@ public class DejaVuArm {
         this.isAuton = isAuton;
         this.hwMap = hMap;
         this.armMotor = hwMap.get(DcMotorEx.class, "armMotor");
+        //this.spoolMotor = hwMap.get(DcMotorEx.class, "leftEncoder");
         armMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        //spoolMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        //spoolMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         this.gripperServo = hwMap.get(Servo.class, "gripperServo");
         gripperServo.resetDeviceConfigurationForOpMode();
         double zeroPosServo = gripperServo.getPosition();
@@ -70,6 +75,7 @@ public class DejaVuArm {
         if(level != currentLevel) {
             //GO ONE LEVEL DOWN AT FULL speed\
             int height = level_map.get(level);
+
             //checking if going up
             sendToTelemetry("currentPosition:" + armMotor.getCurrentPosition());
             sendToTelemetry("setting to height:" + height);
@@ -77,8 +83,11 @@ public class DejaVuArm {
             //setting the armMotor's target
             sendToTelemetry("starting motor");
             this.armMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            //this.spoolMotor.setDirection(armMotor.getDirection());//work on this
             while (armMotor.isBusy()) {
                 armMotor.setVelocity(SLIDER_TPS);
+                //this.spoolMotor.setDirection(armMotor.getDirection());//
+                //spoolMotor.setVelocity(SLIDER_TPS);
                 armMotor.setPower(1);
                 sendToTelemetry("busy busy");
             }
@@ -86,6 +95,7 @@ public class DejaVuArm {
             //motor done/break
             sendToTelemetry("Applying Brakes!");
             armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+            //spoolMotor.setPower(0);
             sendToTelemetry("turning off motor power");
 //            armMotor.setPower(0);
 
