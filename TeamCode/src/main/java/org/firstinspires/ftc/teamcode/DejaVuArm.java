@@ -28,14 +28,15 @@ public class DejaVuArm {
     double  MIN_POSITION = 0, MAX_POSITION = 1;
 
     //max rpm for our arm motor is 1,850, here we're using 1750 rpm
-    public static double SLIDER_TPS = 1700.0; //5959.5 MAX
+    public static double SLIDER_TPS = 2500.0; //5959.5 MAX
+    public static double SLIDER_TPS_DOWN = 2000.0;
     static HashMap<Integer, Integer> level_map = new HashMap<>();
     {
         level_map.put(0, 0);//ground
-        level_map.put(1, 350);//5 inches off the ground
+        level_map.put(1, 400);//5 inches off the ground
         level_map.put(2, 1250);//16 inches
-        level_map.put(3, 1350);// to be 26 inches
-        level_map.put(4, 2350);//to be 36 inches
+        level_map.put(3, 2050);// to be 26 inches
+        level_map.put(4, 3000);//to be 36 inches
 
         //100 = 1 inch
 
@@ -64,7 +65,7 @@ public class DejaVuArm {
     }
 
 
-    public void moveArmToLevel(int level) {
+    public void   moveArmToLevel(int level) {
 
         sendToTelemetry("moveArmToLevel:" + level);
         if(level != currentLevel) {
@@ -78,7 +79,11 @@ public class DejaVuArm {
             sendToTelemetry("starting motor");
             this.armMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             while (armMotor.isBusy()) {
-                armMotor.setVelocity(SLIDER_TPS);
+                if (height > currentLevel) {
+                    armMotor.setVelocity(SLIDER_TPS);
+                }else{
+                    armMotor.setVelocity(SLIDER_TPS_DOWN);
+                }
                 armMotor.setPower(1);
                 sendToTelemetry("busy busy");
             }
@@ -90,7 +95,7 @@ public class DejaVuArm {
 //            armMotor.setPower(0);
 
 
-//          // this is to auto-correct if we went beyond the level we need to go - MIGHT NOT NEED IT
+//            //this is to auto-correct if we went beyond the level we need to go - MIGHT NOT NEED IT
 //            if (armMotor.getCurrentPosition() != level_map.get(level)) {
 //                armMotor.setTargetPosition(level_map.get(level));
 //                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -98,7 +103,6 @@ public class DejaVuArm {
 //                    armMotor.setVelocity(SLIDER_TPS/4);
 //                }
 //                armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
-//                armMotor.setPower(0);
 //            }
             currentLevel = level;
         } else {
@@ -112,7 +116,7 @@ public class DejaVuArm {
     // drop the object
     public void closePos() {
         gripperServo.setDirection(Servo.Direction.FORWARD);
-        gripperServo.setPosition(0.95);
+        gripperServo.setPosition(0.9);
         sendToTelemetry("Sending to Pos Servo:" + gripperServo.getPosition());
     }
 
@@ -122,6 +126,7 @@ public class DejaVuArm {
         gripperServo.setPosition(0.3);
         sendToTelemetry("Sending to Pos Servo:" + gripperServo.getPosition());
     }
+
 
 
 

@@ -64,19 +64,19 @@ public class GamePadOpMode extends LinearOpMode {
             double turnPower;
 
             while (opModeIsActive()) {
-                drive = gamepad1.left_stick_y;
-                turn = -gamepad1.left_stick_x;
+                drive = (gamepad1.left_stick_y)*0.7;
+                turn = (-gamepad1.left_stick_x)*0.7;
                 leftPower = Range.clip(drive + turn, -1.0, 1.0);
                 rightPower = Range.clip(drive - turn, -1.0, 1.0);
-                turnPower = Range.clip(-gamepad1.right_stick_x, -1.0, 1.0);
+                turnPower = Range.clip((-gamepad1.right_stick_x)*0.65, -1.0, 1.0);
 
 //                telemetry.addData("GP1 drive set to:", "" + drive);
 //                telemetry.addData("GP1 turn set to:", "" + turn);
 
                 if (gamepad1.left_trigger > 0.5) {
-                    leftPower = leftPower / 4;
-                    rightPower = rightPower / 4;
-                    turnPower = turnPower /4;
+                    leftPower = leftPower *0.4;
+                    rightPower = rightPower *0.4;
+                    turnPower = turnPower *0.4;
                 }
 
                 if (gamepad1.right_stick_x != 0) {
