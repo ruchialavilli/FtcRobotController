@@ -85,7 +85,6 @@ public class DejaVuArm {
                     armMotor.setVelocity(SLIDER_TPS_DOWN);
                 }
                 armMotor.setPower(1);
-                sendToTelemetry("busy busy");
             }
             sendToTelemetry("motor completed");
             //motor done/break

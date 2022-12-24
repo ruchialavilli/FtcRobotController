@@ -9,18 +9,17 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 @Autonomous(name="Red2OpMode", group="AutoOpModes")
 public class Red2OpMode extends BaseAutoOpMode {
 
-        public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
             //the auton file for Red2 and Blue1
             SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-            //robot.init(hardwareMap, true);
+
+            robot.arm = new DejaVuArm();
+            robot.arm.init(hardwareMap, true);
 
             Pose2d startPose = new Pose2d(-66, 36, Math.toRadians(90));
             drive.setPoseEstimate(startPose);
 
             Trajectory traj1 = drive.trajectoryBuilder(startPose)
-                    /*.addDisplacementMarker(() -> {
-                        robot.arm.openPos();
-                    })*/
                     .strafeTo(new Vector2d(-9, 36))
                     .build();
 
@@ -54,26 +53,39 @@ public class Red2OpMode extends BaseAutoOpMode {
 
             waitForStart();
 
-            if(isStopRequested()) return;
+            while (opModeIsActive()) {
+                if(isStopRequested()) return;
 
-            drive.followTrajectory(traj1);
-            //strafe to nearest pole
-            drive.followTrajectory(traj2);
-            //backing up
-            for(int i = 0; i<3; i++) {
-                drive.followTrajectory(traj3);
-                //aligning
-                drive.followTrajectory(traj4);
-                //aligning and drop
-                drive.followTrajectory(traj5);
+                robot.arm.openPos();
+                robot.arm.moveArmToLevel(1);
+                drive.followTrajectory(traj1);
+                //strafe to nearest pole
+                drive.followTrajectory(traj2);
                 //backing up
-                drive.followTrajectory(traj6);
-                //strafe away from pole
-                drive.followTrajectory(traj7);
-                //getting cone
-                drive.followTrajectory(traj8);
-                //coming right back
-            }
+                for (int i = 0; i < 3; i++) {
+
+                    if(isStopRequested()) return;
+
+                    drive.followTrajectory(traj3);
+                    robot.arm.moveArmToLevel(4);
+                    //aligning
+                    drive.followTrajectory(traj4);
+                    robot.arm.closePos();
+                    //aligning and drop
+                    drive.followTrajectory(traj5);
+                    robot.arm.moveArmToLevel(1);
+                    //backing up
+                    drive.followTrajectory(traj6);
+                    //strafe away from pole
+                    drive.followTrajectory(traj7);
+                    robot.arm.moveArmToLevel(0);
+                    robot.arm.openPos();
+                    robot.arm.moveArmToLevel(1);
+                    //getting cone
+                    drive.followTrajectory(traj8);
+                    //coming right back
+                    }
+                }
 
         }
 
