@@ -96,29 +96,21 @@ public class Red1OpMode extends BaseAutoOpMode {
                 while (opModeIsActive() && counter < 3){
                     drive.followTrajectory(traj7);
                     robot.arm.moveArmToLevel(4);
-                    if(!opModeIsActive()) break;
                     //aligning
                     drive.followTrajectory(traj8);
                     robot.arm.closePos();
-                    if(!opModeIsActive()) break;
                     //align and drop
                     drive.followTrajectory(traj9);
                     robot.arm.moveArmToLevel(1);
-                    if(!opModeIsActive()) break;
                     //backing up
                     drive.followTrajectory(traj10);
-                    if(!opModeIsActive()) break;
                     //still backing up
                     drive.followTrajectory(traj11);
-                    if(!opModeIsActive()) break;
                     //turning to new cone
                     drive.turn(Math.toRadians(-3));
-                    if(!opModeIsActive()) break;
                     robot.arm.moveArmToLevel(0);
-                    if(!opModeIsActive()) break;
                     robot.arm.openPos();
                     robot.arm.moveArmToLevel(1);
-                    if(!opModeIsActive()) break;
                     drive.followTrajectory(traj12);
                     //going back
                     counter++;

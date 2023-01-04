@@ -23,7 +23,7 @@ public class Red2OpMode extends BaseAutoOpMode {
                     .strafeTo(new Vector2d(-9, 36))
                     .build();
 
-            Trajectory traj2 = drive.trajectoryBuilder(traj1.end())
+            Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(5))))
                     .lineTo(new Vector2d(-9, 15))
                     .build();
 
@@ -44,10 +44,10 @@ public class Red2OpMode extends BaseAutoOpMode {
                     .build();
 
             Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
-                    .lineTo(new Vector2d(-9, 63))
+                    .lineTo(new Vector2d(-9, 53))
                     .build();
 
-            Trajectory traj8 = drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(-3))))
+            Trajectory traj8 = drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(-4))))
                     .lineTo(new Vector2d(-9, 15))
                     .build();
 
