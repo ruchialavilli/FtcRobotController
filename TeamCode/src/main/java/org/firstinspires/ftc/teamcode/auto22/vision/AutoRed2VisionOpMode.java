@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.vision;
+package org.firstinspires.ftc.teamcode.auto22.vision;
 
 import android.util.Log;
 
@@ -11,15 +11,15 @@ import org.firstinspires.ftc.teamcode.DejaVuBot;
 /**
  * This class represents the autonomous run from Red1 position
  */
-@Autonomous(name="AutoBlue1VisionOpMode", group="AutoOpModes")
-public class AutoBlue1VisionOpMode extends BaseAutoVisionOpMode {
-    private String TAG = "AutoBlue1VisionOpMode";
+@Autonomous(name="AutoRed2VisionOpMode", group="AutoOpModes")
+public class AutoRed2VisionOpMode extends BaseAutoVisionOpMode {
+    private String TAG = "AutoRed2VisionOpMode";
     private ElapsedTime runtime = new ElapsedTime();
     private Thread levelFinderThread;
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap, true);
-        //robot.arm.closeBucketPos();
+
         currentLevel = -1;
         redFlag = true;
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
@@ -51,62 +51,37 @@ public class AutoBlue1VisionOpMode extends BaseAutoVisionOpMode {
         levelFinderThread.join();
         Log.d(TAG, "thread joins complete");
         //46
-
-        driveForwardByInches(43, robot, DejaVuBot.TPS);
-        turnToPID(88,robot);
+        driveForwardByInches(46, robot, DejaVuBot.TPS);
+        turnToPID(85,robot);
         telemetry.addData(TAG, "Turned to hub  ");
         telemetry.update();
-        //changed from 8->9
-        driveForwardByInches(-8, robot, DejaVuBot.TPS);
+        driveForwardByInches(-6, robot, DejaVuBot.TPS);
 
-        //Drop the piece here and reset the arm to initial position
         robot.arm.moveArmToLevel(currentLevel);
-        sleep(300);
-        //robot.arm.bucketServo.setPosition(0.113);
+        sleep(500);
+        //robot.arm.openBucketPos();
         sleep(1000);
-        //robot.arm.bucketServo.setPosition(0.875);
+        //robot.arm.closeBucketPos();
         sleep(1000);
         robot.arm.moveArmToLevel(0);
         telemetry.addData(TAG, " Dropped the freight ");
         telemetry.update();
-        //changed from 71 -> 72
-        //Move the robot to spin the duck
-        driveForwardByInches(76/2, robot, DejaVuBot.TPS*1.2);
-        turnToPID(-82,robot);
-        telemetry.addData(TAG, " Driving to wall ");
-        telemetry.update();
 
-        driveForwardByInches(-30, robot, DejaVuBot.TPS*2);
-        driveForwardByInches(-3, robot, DejaVuBot.TPS);
-        turnToPID(-20, robot);
-        //driveForwardByInches(-2, robot, DejaVuBot.TPS/2);
+        //Move the robot to warehouse for second point
+        driveForwardByInches(1, robot, DejaVuBot.TPS);
+        turnToPID(8, robot);
+
+        strafeDirection(robot, false, 1224);
 
 
-        //f
-        driveForwardByInches(-4/2, robot, DejaVuBot.TPS/2);
+        //robot.intake();
+        driveForwardByInches(45, robot, DejaVuBot.TPS);
+        sleep(500);
+        strafeDirection(robot, true, 600);
 
-        turnToPID(20,robot);
-        //changed from 50 -> 60
-        //changed from 55->40 2/2/22
-
-
-
-        telemetry.addData(TAG, " Duck spinned ");
-        telemetry.update();
-
-        driveForwardByInches(22,robot, DejaVuBot.TPS*2);
-        // Send telemetry message to signify robot waiting;
+        driveForwardByInches(-10, robot, DejaVuBot.TPS);
 
         telemetry.addData(TAG, "Parked in warehouse");
-        if(currentLevel == DejaVuArm.BOTTOM_LEVEL) {
-            telemetry.addLine(" Current level discovered is Bottom level");
-        } else if(currentLevel == DejaVuArm.TOP_LEVEL) {
-            telemetry.addLine(" Current level discovered is Top level");
-        } else if(currentLevel == DejaVuArm.MID_LEVEL) {
-            telemetry.addLine(" Current level discovered is Mid level");
-        } else {
-            telemetry.addLine(" Current level discovered is UNKNOWN - defaulting to TOP");
-        }
         telemetry.update();
     }
 

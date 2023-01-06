@@ -1,15 +1,16 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.auto22;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.navigation.*;
+
+import org.firstinspires.ftc.teamcode.DejaVuBot;
 
 /**
  * This class represents the autonomous run from Red1 position
  */
-@Autonomous(name="AutoRed2OpMode", group="AutoOpModes")
-public class AutoRed2OpMode extends BaseAutoOpMode {
-    private String name = "AutoRed2OpMode";
+@Autonomous(name="AutoBlue2OpMode", group="AutoOpModes")
+public class AutoBlue2OpMode extends BaseAutoOpMode {
+    private String name = "AutoBlue2OpMode";
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -27,15 +28,16 @@ public class AutoRed2OpMode extends BaseAutoOpMode {
         telemetry.addData(name, " Running the opmode ");
         telemetry.update();
 
-        driveForwardByInches(46, robot, DejaVuBot.TPS);
-        turnToPID(90,robot);
+        driveForwardByInches(44, robot, DejaVuBot.TPS);
+        turnToPID(-90,robot);
         telemetry.addData(name, "Turned to hub  ");
         telemetry.update();
         driveForwardByInches(-2, robot, DejaVuBot.TPS);
+        //originally 6 inches
 
         robot.arm.moveArmToLevel(2);
         sleep(500);
-       // robot.arm.openBucketPos();
+        //robot.arm.openBucketPos();
         sleep(1000);
         //robot.arm.closeBucketPos();
         sleep(500);
@@ -44,17 +46,14 @@ public class AutoRed2OpMode extends BaseAutoOpMode {
         telemetry.update();
 
         //Move the robot to warehouse for second point
-        driveForwardByInches(2, robot, DejaVuBot.TPS);
-        strafeDirection(robot, false, 920);
+        driveForwardByInches(4, robot, DejaVuBot.TPS);
+        strafeDirection(robot, true, 900);
 
-        //robot.arm.closeBucketPos();
-        //robot.intake();
-        driveForwardByInches(45, robot, DejaVuBot.TPS);
-        strafeDirection(robot, true, 500);
+        driveForwardByInches(36, robot, DejaVuBot.TPS);
+        strafeDirection(robot, false, 500);
 
         telemetry.addData(name, "Parked in warehouse");
         telemetry.update();
-
 
     }
 

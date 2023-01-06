@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.vision;
+package org.firstinspires.ftc.teamcode.auto22.vision;
 
 import android.util.Log;
 
@@ -38,9 +38,8 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.BaseAutoOpMode;
+import org.firstinspires.ftc.teamcode.auto22.BaseAutoOpMode;
 import org.firstinspires.ftc.teamcode.DejaVuArm;
-import org.firstinspires.ftc.teamcode.DejaVuBot;
 
 import java.util.List;
 

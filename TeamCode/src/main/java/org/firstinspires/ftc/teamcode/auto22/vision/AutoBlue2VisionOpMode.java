@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.vision;
+package org.firstinspires.ftc.teamcode.auto22.vision;
 
 import android.util.Log;
 
@@ -11,9 +11,9 @@ import org.firstinspires.ftc.teamcode.DejaVuBot;
 /**
  * This class represents the autonomous run from Red1 position
  */
-@Autonomous(name="AutoRed2VisionOpMode", group="AutoOpModes")
-public class AutoRed2VisionOpMode extends BaseAutoVisionOpMode {
-    private String TAG = "AutoRed2VisionOpMode";
+@Autonomous(name="AutoBlue2VisionOpMode", group="AutoOpModes")
+public class AutoBlue2VisionOpMode extends BaseAutoVisionOpMode {
+    private String TAG = "AutoBlue2VisionOpMode";
     private ElapsedTime runtime = new ElapsedTime();
     private Thread levelFinderThread;
     @Override
@@ -52,10 +52,10 @@ public class AutoRed2VisionOpMode extends BaseAutoVisionOpMode {
         Log.d(TAG, "thread joins complete");
         //46
         driveForwardByInches(46, robot, DejaVuBot.TPS);
-        turnToPID(85,robot);
+        turnToPID(-85,robot);
         telemetry.addData(TAG, "Turned to hub  ");
         telemetry.update();
-        driveForwardByInches(-6, robot, DejaVuBot.TPS);
+        driveForwardByInches(-7, robot, DejaVuBot.TPS);
 
         robot.arm.moveArmToLevel(currentLevel);
         sleep(500);
@@ -69,17 +69,17 @@ public class AutoRed2VisionOpMode extends BaseAutoVisionOpMode {
 
         //Move the robot to warehouse for second point
         driveForwardByInches(1, robot, DejaVuBot.TPS);
-        turnToPID(8, robot);
+        turnToPID(-8, robot);
 
-        strafeDirection(robot, false, 1224);
+        strafeDirection(robot, true, 1424);
 
 
         //robot.intake();
         driveForwardByInches(45, robot, DejaVuBot.TPS);
         sleep(500);
-        strafeDirection(robot, true, 600);
+        strafeDirection(robot, false, 600);
 
-        driveForwardByInches(-10, robot, DejaVuBot.TPS);
+        driveForwardByInches(-5, robot, DejaVuBot.TPS);
 
         telemetry.addData(TAG, "Parked in warehouse");
         telemetry.update();

@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.auto22.BaseAutoOpMode;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous(name="Red1OpMode", group="AutoOpModes")
@@ -36,7 +37,7 @@ public class Red1OpMode extends BaseAutoOpMode {
                     .build();
 
             Trajectory traj5 = drive.trajectoryBuilder(traj4.end().plus(new Pose2d(0, 0, Math.toRadians(183))))
-                    .lineTo(new Vector2d(9, 63))
+                    .lineTo(new Vector2d(9, 53))
                     .build();
 
             Trajectory traj6 = drive.trajectoryBuilder(traj5.end())
@@ -60,7 +61,7 @@ public class Red1OpMode extends BaseAutoOpMode {
                     .build();
 
             Trajectory traj11 = drive.trajectoryBuilder(traj10.end())
-                    .lineTo(new Vector2d(9, 63))
+                    .lineTo(new Vector2d(9, 53))
                     .build();
 
             Trajectory traj12 = drive.trajectoryBuilder(traj11.end().plus(new Pose2d(0, 0, Math.toRadians(-3))))

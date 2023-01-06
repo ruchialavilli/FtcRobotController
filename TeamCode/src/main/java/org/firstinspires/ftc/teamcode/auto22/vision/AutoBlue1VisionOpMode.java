@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.vision;
+package org.firstinspires.ftc.teamcode.auto22.vision;
 
 import android.util.Log;
 
@@ -11,14 +11,15 @@ import org.firstinspires.ftc.teamcode.DejaVuBot;
 /**
  * This class represents the autonomous run from Red1 position
  */
-@Autonomous(name="AutoRed1VisionOpMode", group="AutoOpModes")
-public class AutoRed1VisionOpMode extends BaseAutoVisionOpMode {
-    private String TAG = "AutoRed1VisionOpMode";
+@Autonomous(name="AutoBlue1VisionOpMode", group="AutoOpModes")
+public class AutoBlue1VisionOpMode extends BaseAutoVisionOpMode {
+    private String TAG = "AutoBlue1VisionOpMode";
     private ElapsedTime runtime = new ElapsedTime();
     private Thread levelFinderThread;
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap, true);
+        //robot.arm.closeBucketPos();
         currentLevel = -1;
         redFlag = true;
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
@@ -52,7 +53,7 @@ public class AutoRed1VisionOpMode extends BaseAutoVisionOpMode {
         //46
 
         driveForwardByInches(43, robot, DejaVuBot.TPS);
-        turnToPID(-88,robot);
+        turnToPID(88,robot);
         telemetry.addData(TAG, "Turned to hub  ");
         telemetry.update();
         //changed from 8->9
@@ -70,20 +71,21 @@ public class AutoRed1VisionOpMode extends BaseAutoVisionOpMode {
         telemetry.update();
         //changed from 71 -> 72
         //Move the robot to spin the duck
-        driveForwardByInches(72/2, robot, DejaVuBot.TPS*1.2);
-        turnToPID(82,robot);
+        driveForwardByInches(76/2, robot, DejaVuBot.TPS*1.2);
+        turnToPID(-82,robot);
         telemetry.addData(TAG, " Driving to wall ");
         telemetry.update();
 
         driveForwardByInches(-30, robot, DejaVuBot.TPS*2);
-
-        turnToPID(20, robot);
-
+        driveForwardByInches(-3, robot, DejaVuBot.TPS);
+        turnToPID(-20, robot);
+        //driveForwardByInches(-2, robot, DejaVuBot.TPS/2);
 
 
         //f
-        driveForwardByInches(-3/2, robot, DejaVuBot.TPS/2);
-        turnToPID(-20,robot);
+        driveForwardByInches(-4/2, robot, DejaVuBot.TPS/2);
+
+        turnToPID(20,robot);
         //changed from 50 -> 60
         //changed from 55->40 2/2/22
 
@@ -92,7 +94,7 @@ public class AutoRed1VisionOpMode extends BaseAutoVisionOpMode {
         telemetry.addData(TAG, " Duck spinned ");
         telemetry.update();
 
-        driveForwardByInches(19,robot, DejaVuBot.TPS);
+        driveForwardByInches(22,robot, DejaVuBot.TPS*2);
         // Send telemetry message to signify robot waiting;
 
         telemetry.addData(TAG, "Parked in warehouse");
