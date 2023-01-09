@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
  * exercise is to ascertain whether the localizer has been configured properly (note: the pure
  * encoder localizer heading may be significantly off if the track width has not been tuned).
  */
-
+@Disabled
 @TeleOp(group = "drive")
 public class LocalizationTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
@@ -37,8 +37,12 @@ public class LocalizationTest extends LinearOpMode {
             drive.update();
 
             Pose2d poseEstimate = drive.getPoseEstimate();
-            telemetry.addData("x", poseEstimate.getY());// remember that X and Y are reversed for us...
-            telemetry.addData("y", poseEstimate.getX());
+            // for 3-wheel odometry
+//            telemetry.addData("x", poseEstimate.getY());// remember that X and Y are reversed for us...
+//            telemetry.addData("y", poseEstimate.getX());
+            // for 2-wheel odometry
+            telemetry.addData("x", poseEstimate.getX());
+            telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
             telemetry.update();
         }

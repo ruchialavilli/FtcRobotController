@@ -121,6 +121,10 @@ public class GamePadOpMode extends LinearOpMode {
                     telemetry.addData("GP2 Input", "Right Bumper");
                     telemetry.addData("GP2 Input level", "0 - Home");
                     robot.arm.moveArmToLevel(0);
+                }else if(gamepad2.left_bumper) {
+                    telemetry.addData("GP2 Input", "Left Bumper");
+                    telemetry.addData("GP2 Input level", "Pick up");
+                    robot.arm.moveArmToLevel(6);
                 }else {
                     telemetry.addData("GP2 Input", "Unknown Ignoring");
                 }

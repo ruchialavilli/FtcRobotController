@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.auto22.BaseAutoOpMode;
@@ -12,88 +13,46 @@ public class test extends BaseAutoOpMode {
 
     public void runOpMode() throws InterruptedException {
 
-        //TODO: redo heading pid for accuracy
-        //TODO: finish up Red2 and Blue 1 Opmode angle edits, etc FRI MAX
-        //TODO: Finish fixing Red1 and Blue2 Opmode angle edits, etc FRI MAx
-        //TODO: VISION NEXT FRI
+        //for testing small changes before adding
 
-            SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-            //red2
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        //red2
 
-            robot.arm = new DejaVuArm();
-            robot.arm.init(hardwareMap, true);
+        robot.arm = new DejaVuArm();
+        robot.arm.init(hardwareMap, true);
+        if(isStopRequested()) return;
 
+        Pose2d poseEstimate = drive.getPoseEstimate();
+        telemetry.addData("startX", poseEstimate.getX());
+        telemetry.addData("startY", poseEstimate.getY());
+        telemetry.addData("startHeading", poseEstimate.getHeading());
+        telemetry.update();
 
         Pose2d startPose = new Pose2d(-63.375, 39, Math.toRadians(0));
         drive.setPoseEstimate(startPose);
 
-        TrajectorySequence traj = drive.trajectorySequenceBuilder(startPose)
-                .lineTo(new Vector2d(-63.375, 34))
-                .lineTo(new Vector2d(0, 34))
-                .turn(Math.toRadians(270))
-                .lineTo(new Vector2d(0, 30))
-                .lineTo(new Vector2d(0, 34))
-                .lineTo(new Vector2d(-12, 34))
-                .turn(Math.toRadians(90))
-                .lineTo(new Vector2d(-12, 53))
-                .addDisplacementMarker(() -> {
-                    robot.arm.moveArmToLevel(0);
-                    robot.arm.openPos();
-                })
-                .waitSeconds(0.5)
-                .addDisplacementMarker(() -> {
-                    robot.arm.moveArmToLevel(1);
-                })
-                .lineTo(new Vector2d(-12, 12))
-                //.turn(Math.toRadians(-3))
+        Trajectory traj1_1 = drive.trajectoryBuilder(startPose)
+                .lineTo(new Vector2d(0, 39))
                 .build();
-
-        TrajectorySequence traj2 = drive.trajectorySequenceBuilder(traj.end())
-                .strafeTo(new Vector2d(0, 12))
-                .addDisplacementMarker(() -> {
-                    robot.arm.moveArmToLevel(4);
-                })
-                .lineTo(new Vector2d(0, 18))
-                .addDisplacementMarker(() -> {
-                    robot.arm.closePos();
-                })
-                .lineTo(new Vector2d(0, 12))
-                .addDisplacementMarker(() -> {
-                    robot.arm.moveArmToLevel(1);
-                })
-                .strafeTo(new Vector2d(-12, 12))
-                .lineTo(new Vector2d(-12, 53))
-                .addDisplacementMarker(() -> {
-                    robot.arm.moveArmToLevel(0);
-                    robot.arm.openPos();
-                })
-                .waitSeconds(0.5)
-                .addDisplacementMarker(() -> {
-                    robot.arm.moveArmToLevel(1);
-                })
-                .lineTo(new Vector2d(-12, 12))
-                //.turn(Math.toRadians(3))
-                .build();
-
         waitForStart();
 
-        if(isStopRequested()) return;
-
-        robot.arm.openPos();
-        robot.arm.moveArmToLevel(1);
-
-        drive.followTrajectorySequence(traj);
-
-        for (int i = 0; i < 3; i++) {
-
-            if (isStopRequested()) return;
-
-            drive.followTrajectorySequence(traj2);
 
 
+        poseEstimate = drive.getPoseEstimate();
+        telemetry.addData("setX", poseEstimate.getX());
+        telemetry.addData("setY", poseEstimate.getY());
+        telemetry.addData("setHeading", poseEstimate.getHeading());
+        telemetry.update();
 
-        }
+        drive.followTrajectory(traj1_1);
 
+        poseEstimate = drive.getPoseEstimate();
+        telemetry.addData("finalX", poseEstimate.getX());
+        telemetry.addData("finalY", poseEstimate.getY());
+        telemetry.addData("finalHeading", poseEstimate.getHeading());
+        telemetry.update();
+
+        while (!isStopRequested() && opModeIsActive()) ;
 
     }
 }

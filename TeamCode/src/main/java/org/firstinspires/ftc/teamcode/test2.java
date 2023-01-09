@@ -2,20 +2,17 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.auto22.BaseAutoOpMode;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
-
+@Disabled
 @Autonomous(name="test2", group="AutoOpModes")
 public class test2 extends BaseAutoOpMode {
-
+//old Red2 code -> issue with skipping lines
     public void runOpMode() throws InterruptedException {
 
-        //TODO: redo heading pid for accuracy
-        //TODO: finish up Red2 and Blue 1 Opmode angle edits, etc FRI MAX
-        //TODO: Finish fixing Red1 and Blue2 Opmode angle edits, etc FRI MAx
-        //TODO: VISION NEXT FRI
 
             SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
             //red2
