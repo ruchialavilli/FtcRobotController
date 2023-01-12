@@ -36,15 +36,15 @@ public class Red2OpMode extends BaseAutoOpMode {
                  .lineTo(new Vector2d(-14, 32))
                  .build();
 
-            Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(-43))))
-                .forward(11)
+            Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(-45))))
+                .forward(12)
                 .build();
 
             Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                .back(11)
+                .back(12)
                 .build();
 
-            Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(133))))
+            Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(135))))
                 .lineTo(new Vector2d(-14, 59))
                 .build();
 
@@ -54,15 +54,15 @@ public class Red2OpMode extends BaseAutoOpMode {
 
             //looping code trajectories...
 
-            Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(-133))))
-                .forward(11)
+            Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(-135))))
+                .forward(12)
                 .build();
 
             Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
-                .back(11)
+                .back(12)
                 .build();
 
-            Trajectory traj8 = drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(133))))
+            Trajectory traj8 = drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(135))))
                 .lineTo(new Vector2d(-14, 59))
                 .build();
 
@@ -86,7 +86,7 @@ public class Red2OpMode extends BaseAutoOpMode {
             sleep(500);
             drive.followTrajectory(traj0);
             drive.followTrajectory(traj1);
-            drive.turn(Math.toRadians(-43));
+            drive.turn(Math.toRadians(-45));
             robot.arm.moveArmToLevel(4);
             telemetry.addData("Trajectory", " moved to level 4");
             telemetry.update();
@@ -100,7 +100,7 @@ public class Red2OpMode extends BaseAutoOpMode {
             telemetry.addData("Trajectory", " moved to level 2");
             telemetry.update();
             sleep(500);
-            drive.turn(Math.toRadians(133));
+            drive.turn(Math.toRadians(135));
             drive.followTrajectory(traj4);
             robot.arm.moveArmToLevel(6);
             sleep(500);
@@ -114,7 +114,7 @@ public class Red2OpMode extends BaseAutoOpMode {
             drive.followTrajectory(traj5);
 
 //loop from here if necessary
-            drive.turn(Math.toRadians(-133));
+            drive.turn(Math.toRadians(-135));
             robot.arm.moveArmToLevel(4);
             telemetry.addData("Trajectory", " moved to level 4");
             telemetry.update();
@@ -128,7 +128,7 @@ public class Red2OpMode extends BaseAutoOpMode {
             telemetry.addData("Trajectory", " moved to level 2");
             telemetry.update();
             sleep(500);
-            drive.turn(Math.toRadians(133));
+            drive.turn(Math.toRadians(135));
             drive.followTrajectory(traj8);
             robot.arm.moveArmToLevel(6);
             sleep(500);

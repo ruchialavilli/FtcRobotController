@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto22;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.DejaVuBot;
@@ -17,6 +18,8 @@ import org.firstinspires.ftc.teamcode.DejaVuBot;
     Strafe -> Gyro sensor
     Vision -> OpenCV
 */
+@Disabled
+
 @Autonomous(name="AutoRed1OpMode", group="AutoOpModes")
 public class AutoRed1OpMode extends BaseAutoOpMode {
     private ElapsedTime runtime = new ElapsedTime();

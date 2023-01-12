@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.auto22.vision;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -47,7 +48,8 @@ import java.util.List;
  * This class represents the autonomous run from Red 2  position with webcam integration
  */
 @Autonomous(name = "BaseAutoVisionOpMode", group = "AutoOpModes")
-//@Disabled
+@Disabled
+
 public class BaseAutoVisionOpMode extends BaseAutoOpMode {
     protected static final String TFOD_MODEL_ASSET = "FreightFrenzy_BC.tflite";
     protected static final String VUFORIA_KEY =

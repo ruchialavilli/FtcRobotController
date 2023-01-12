@@ -117,20 +117,16 @@ public class DejaVuArm {
     // drop the object
     public void closePos() {
         gripperServo.setDirection(Servo.Direction.FORWARD);
-        gripperServo.setPosition(0.9);
+        gripperServo.setPosition(0.5);
         sendToTelemetry("Sending to Pos Servo:" + gripperServo.getPosition());
     }
 
     // pick up object
     public void openPos() {
-        gripperServo.setDirection(Servo.Direction.REVERSE);
-        gripperServo.setPosition(0.3);
+        gripperServo.setDirection(Servo.Direction.FORWARD);
+        gripperServo.setPosition(0.2);
         sendToTelemetry("Sending to Pos Servo:" + gripperServo.getPosition());
     }
-
-
-
-
 
 
     public void setTelemetry(Telemetry telemetry) {

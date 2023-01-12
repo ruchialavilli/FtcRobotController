@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auto22.vision;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.DejaVuArm;
@@ -12,6 +13,8 @@ import org.firstinspires.ftc.teamcode.DejaVuBot;
  * This class represents the autonomous run from Red1 position
  */
 @Autonomous(name="AutoRed1VisionOpMode", group="AutoOpModes")
+@Disabled
+
 public class AutoRed1VisionOpMode extends BaseAutoVisionOpMode {
     private String TAG = "AutoRed1VisionOpMode";
     private ElapsedTime runtime = new ElapsedTime();

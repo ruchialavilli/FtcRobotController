@@ -68,7 +68,7 @@ public class GamePadOpMode extends LinearOpMode {
                 turn = (-gamepad1.left_stick_x)*0.7;
                 leftPower = Range.clip(drive + turn, -1.0, 1.0);
                 rightPower = Range.clip(drive - turn, -1.0, 1.0);
-                turnPower = Range.clip((-gamepad1.right_stick_x)*0.65, -1.0, 1.0);
+                turnPower = Range.clip((-gamepad1.right_stick_x)*0.75, -1.0, 1.0);
 
 //                telemetry.addData("GP1 drive set to:", "" + drive);
 //                telemetry.addData("GP1 turn set to:", "" + turn);
@@ -89,9 +89,9 @@ public class GamePadOpMode extends LinearOpMode {
                 }
 
 
-//                telemetry.addData("GP1 Status", "Completed");
+                telemetry.addData("GP1 Status", "Completed");
 //                telemetry.addData("GP1 Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-//                telemetry.addData("GP1 GamePadOpMode", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+                telemetry.addData("GP1 GamePadOpMode", "Leg 1: %2.5f S Elapsed", runtime.seconds());
                 telemetry.update();
             } //end of while loop
             Log.d(TAG, "Thread 1 finishing up");
@@ -121,10 +121,6 @@ public class GamePadOpMode extends LinearOpMode {
                     telemetry.addData("GP2 Input", "Right Bumper");
                     telemetry.addData("GP2 Input level", "0 - Home");
                     robot.arm.moveArmToLevel(0);
-                }else if(gamepad2.left_bumper) {
-                    telemetry.addData("GP2 Input", "Left Bumper");
-                    telemetry.addData("GP2 Input level", "Pick up");
-                    robot.arm.moveArmToLevel(6);
                 }else {
                     telemetry.addData("GP2 Input", "Unknown Ignoring");
                 }
@@ -139,10 +135,10 @@ public class GamePadOpMode extends LinearOpMode {
 
 
 
-//                telemetry.addData("GP2 Status", "Completed");
+                telemetry.addData("GP2 Status", "Completed");
 //                telemetry.addData("GP2 armMotor encoder value", robot.arm.armMotor.getCurrentPosition());
 //                telemetry.addData("GP2 servo Position", robot.arm.bucketServo.getPosition());
-//                telemetry.addData("GP2 GamePadOpMode", "Leg 1: %2.5f S Elapsed", runtime.seconds());
+                telemetry.addData("GP2 GamePadOpMode", "Leg 1: %2.5f S Elapsed", runtime.seconds());
                 telemetry.update();
             } //end of while loop
             Log.d(TAG, "Thread 2 finishing up");

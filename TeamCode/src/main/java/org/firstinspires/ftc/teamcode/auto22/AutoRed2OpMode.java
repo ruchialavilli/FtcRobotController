@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto22;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.DejaVuBot;
@@ -8,6 +9,8 @@ import org.firstinspires.ftc.teamcode.DejaVuBot;
 /**
  * This class represents the autonomous run from Red1 position
  */
+@Disabled
+
 @Autonomous(name="AutoRed2OpMode", group="AutoOpModes")
 public class AutoRed2OpMode extends BaseAutoOpMode {
     private String name = "AutoRed2OpMode";

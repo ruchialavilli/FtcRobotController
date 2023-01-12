@@ -34,41 +34,41 @@ public class Red1OpMode extends BaseAutoOpMode {
                     .build();
 
             Trajectory traj1 = drive.trajectoryBuilder(traj0.end())
-                    .lineTo(new Vector2d(14, 32))
+                    .lineTo(new Vector2d(16, 32))
                     .build();
 
             Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(43))))
-                    .forward(11)
+                    .forward(12)
                     .build();
 
             Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                    .back(11)
+                    .back(12)
                     .build();
 
             Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(-133))))
-                    .strafeTo(new Vector2d(14, 59))
+                    .strafeTo(new Vector2d(16, 59))
                     .build();
 
             Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                    .lineTo(new Vector2d(14, 32))
+                    .lineTo(new Vector2d(16, 32))
                     .build();
 
             //looping code here
 
             Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(133))))
-                    .forward(11)
+                    .forward(12)
                     .build();
 
             Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
-                    .back(11)
+                    .back(12)
                     .build();
 
             Trajectory traj8 = drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(-133))))
-                    .strafeTo(new Vector2d(14, 59))
+                    .strafeTo(new Vector2d(16, 59))
                     .build();
 
             Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
-                    .lineTo(new Vector2d(14, 32))
+                    .lineTo(new Vector2d(16, 32))
                     .build();
 
 
