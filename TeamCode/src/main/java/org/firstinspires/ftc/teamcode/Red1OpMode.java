@@ -30,14 +30,14 @@ public class Red1OpMode extends BaseAutoOpMode {
             drive.setPoseEstimate(startPose);
 
             Trajectory traj0 = drive.trajectoryBuilder(startPose)
-                    .strafeTo(new Vector2d(-8, 32))
+                    .lineTo(new Vector2d(-8, 32))
                     .build();
 
             Trajectory traj1 = drive.trajectoryBuilder(traj0.end())
-                    .lineTo(new Vector2d(16, 32))
+                    .lineTo(new Vector2d(11, 32))
                     .build();
 
-            Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(43))))
+            Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(42))))
                     .forward(12)
                     .build();
 
@@ -45,17 +45,17 @@ public class Red1OpMode extends BaseAutoOpMode {
                     .back(12)
                     .build();
 
-            Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(-133))))
-                    .strafeTo(new Vector2d(16, 59))
+            Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(-132))))
+                    .strafeTo(new Vector2d(11, 59))
                     .build();
 
             Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                    .lineTo(new Vector2d(16, 32))
+                    .lineTo(new Vector2d(11, 32))
                     .build();
 
             //looping code here
 
-            Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(133))))
+            Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(132))))
                     .forward(12)
                     .build();
 
@@ -63,12 +63,12 @@ public class Red1OpMode extends BaseAutoOpMode {
                     .back(12)
                     .build();
 
-            Trajectory traj8 = drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(-133))))
-                    .strafeTo(new Vector2d(16, 59))
+            Trajectory traj8 = drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(-132))))
+                    .strafeTo(new Vector2d(11, 59))
                     .build();
 
             Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
-                    .lineTo(new Vector2d(16, 32))
+                    .lineTo(new Vector2d(11, 32))
                     .build();
 
 
@@ -87,7 +87,7 @@ public class Red1OpMode extends BaseAutoOpMode {
             sleep(500);
             drive.followTrajectory(traj0);
             drive.followTrajectory(traj1);
-            drive.turn(Math.toRadians(43));
+            drive.turn(Math.toRadians(42));
             robot.arm.moveArmToLevel(4);
             telemetry.addData("Trajectory", " moved to level 4");
             telemetry.update();
@@ -101,7 +101,7 @@ public class Red1OpMode extends BaseAutoOpMode {
             telemetry.addData("Trajectory", " moved to level 2");
             telemetry.update();
             sleep(500);
-            drive.turn(Math.toRadians(-133));
+            drive.turn(Math.toRadians(-132));
             drive.followTrajectory(traj4);
             robot.arm.moveArmToLevel(6);
             sleep(500);
@@ -115,7 +115,7 @@ public class Red1OpMode extends BaseAutoOpMode {
             drive.followTrajectory(traj5);
 
 //loop from here if necessary
-            drive.turn(Math.toRadians(133));
+            drive.turn(Math.toRadians(132));
             robot.arm.moveArmToLevel(4);
             telemetry.addData("Trajectory", " moved to level 4");
             telemetry.update();
@@ -129,7 +129,7 @@ public class Red1OpMode extends BaseAutoOpMode {
             telemetry.addData("Trajectory", " moved to level 2");
             telemetry.update();
             sleep(500);
-            drive.turn(Math.toRadians(-133));
+            drive.turn(Math.toRadians(-132));
             drive.followTrajectory(traj8);
             robot.arm.moveArmToLevel(6);
             sleep(500);
