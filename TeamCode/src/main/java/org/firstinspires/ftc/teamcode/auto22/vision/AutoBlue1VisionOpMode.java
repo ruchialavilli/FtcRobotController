@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.BaseAutoVisionOpMode;
 import org.firstinspires.ftc.teamcode.DejaVuArm;
 import org.firstinspires.ftc.teamcode.DejaVuBot;
 
@@ -19,12 +20,12 @@ public class AutoBlue1VisionOpMode extends BaseAutoVisionOpMode {
     private String TAG = "AutoBlue1VisionOpMode";
     private ElapsedTime runtime = new ElapsedTime();
     private Thread levelFinderThread;
+    int currentLevel;
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap, true);
         //robot.arm.closeBucketPos();
         currentLevel = -1;
-        redFlag = true;
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
         // first.
         initVuforia();
@@ -125,7 +126,7 @@ public class AutoBlue1VisionOpMode extends BaseAutoVisionOpMode {
                 int lastResult = -1;
                 while (opModeIsActive() && count < 3) {
                     lastResult = currentLevel;
-                    currentLevel = findLevel();
+                    //currentLevel = findLevel();
                     telemetry.addData("Last Level", lastResult);
                     telemetry.addData("Current Level", currentLevel);
                     Log.i(TAG, "Called find level for "

@@ -1,146 +1,210 @@
 package org.firstinspires.ftc.teamcode;
+
+import android.util.Log;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.auto22.BaseAutoOpMode;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@Autonomous(name="Red2OpMode", group="AutoOpModes")
-public class Red2OpMode extends BaseAutoOpMode {
-    private ElapsedTime runtime = new ElapsedTime();
-    String name = "Red2 Opmode";
 
-    /* TODO: ensure that robot hits wall to pick up cone in full field and get vision */
+@Autonomous(name = "Red2OpMode", group = "AutoOpModes")
+public class Red2OpMode extends BaseAutoVisionOpMode {
+    private String TAG = "Red2OpMode";
+    private ElapsedTime runtime = new ElapsedTime();
+    private Thread parkingLocationFinderThread;
+    String name = "Red2Opmode";
 
     public void runOpMode() throws InterruptedException {
-            //the auton file used for Red2 and Blue1
-            SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-            robot.arm = new DejaVuArm();
-            robot.arm.init(hardwareMap, true);
+        // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
+        // first.
+        initVuforia();
+        initTfod();
+        /**
+         * Activate TensorFlow Object Detection before we wait for the start command.
+         * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
+         **/
+        if (tfod != null) {
+            tfod.activate();
+            tfod.setZoom(2.0, 16.0/9.0);
+        }
 
+        //the auton file used for Red2 and Blue1
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
+        robot.arm = new DejaVuArm();
+        robot.arm.init(hardwareMap, true);
 
 
         Pose2d startPose = new Pose2d(-63.375, 32, Math.toRadians(0));
-            drive.setPoseEstimate(startPose);
+        drive.setPoseEstimate(startPose);
 
-            Trajectory traj0 = drive.trajectoryBuilder(startPose)
+        Trajectory traj0 = drive.trajectoryBuilder(startPose)
                 .lineTo(new Vector2d(8, 32))
                 .build();
 
-             Trajectory traj1 = drive.trajectoryBuilder(traj0.end())
-                 .lineTo(new Vector2d(-14, 32))
-                 .build();
-
-            Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(-45))))
-                .forward(12)
-                .build();
-
-            Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                .back(12)
-                .build();
-
-            Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(135))))
-                .lineTo(new Vector2d(-14, 59))
-                .build();
-
-            Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
+        Trajectory traj1 = drive.trajectoryBuilder(traj0.end())
                 .lineTo(new Vector2d(-14, 32))
                 .build();
 
-            //looping code trajectories...
-
-            Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(-135))))
+        Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(-45))))
                 .forward(12)
                 .build();
 
-            Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+        Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
                 .back(12)
                 .build();
 
-            Trajectory traj8 = drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(135))))
+        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(135))))
                 .lineTo(new Vector2d(-14, 59))
                 .build();
 
-            Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
+        Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
                 .lineTo(new Vector2d(-14, 32))
                 .build();
 
-            //end of loop
+        //looping code trajectories...
 
-            robot.arm.closePos();
-            telemetry.addData(name, " Robot ready for run");
-            telemetry.update();
+        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(-135))))
+                .forward(12)
+                .build();
 
-            waitForStart();
+        Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
+                .back(12)
+                .build();
 
-            if(isStopRequested()) return;
+//        Trajectory traj8 = drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(135))))
+//                .lineTo(new Vector2d(-14, 59))
+//                .build();
 
-            robot.arm.openPos();
-            sleep(500);
-            robot.arm.moveArmToLevel(2);
-            sleep(500);
-            drive.followTrajectory(traj0);
-            drive.followTrajectory(traj1);
-            drive.turn(Math.toRadians(-45));
-            robot.arm.moveArmToLevel(4);
-            telemetry.addData("Trajectory", " moved to level 4");
-            telemetry.update();
-            sleep(500);
-            drive.followTrajectory(traj2);
-            robot.arm.closePos();
-            telemetry.addData("Trajectory", " release cone");
-            telemetry.update();
-            drive.followTrajectory(traj3);
-            robot.arm.moveArmToLevel(2);
-            telemetry.addData("Trajectory", " moved to level 2");
-            telemetry.update();
-            sleep(500);
-            drive.turn(Math.toRadians(135));
-            drive.followTrajectory(traj4);
-            robot.arm.moveArmToLevel(6);
-            sleep(500);
-            robot.arm.openPos();
-            telemetry.addData("Trajectory", " moved to level 2.5 and pick up cone");
-            telemetry.update();
-            sleep(500);
-            robot.arm.moveArmToLevel(2);
-            telemetry.addData("Trajectory", " moved to level 2");
-            telemetry.update();
-            drive.followTrajectory(traj5);
 
-//loop from here if necessary
-            drive.turn(Math.toRadians(-135));
-            robot.arm.moveArmToLevel(4);
-            telemetry.addData("Trajectory", " moved to level 4");
+
+
+        //end of loop
+
+        robot.arm.closePos();
+        telemetry.addData(name, " Robot ready for run");
+        telemetry.update();
+
+        waitForStart();
+        runtime.reset();
+
+        Log.d(TAG, "starting thread 1");
+        parkingLocationFinderThread = new Thread(parkingLocationFinderRunnable);
+        parkingLocationFinderThread.start();
+
+        // now wait for the threads to finish before returning from this method
+        Log.d(TAG, "waiting for threads to finish...");
+        parkingLocationFinderThread.join();
+        Log.d(TAG, "thread joins complete");
+
+        Trajectory traj8 = drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(135))))
+                .lineTo(locationToPark)
+                .build();
+
+        // always deactivate
+        if (tfod != null) {
+            tfod.deactivate();
+        }
+
+        if (isStopRequested()) return;
+
+        robot.arm.openPos();
+        sleep(500);
+        robot.arm.moveArmToLevel(2);
+        sleep(500);
+        drive.followTrajectory(traj0);
+        drive.followTrajectory(traj1);
+        drive.turn(Math.toRadians(-45));
+        robot.arm.moveArmToLevel(4);
+        telemetry.addData("Trajectory", " moved to level 4");
+        telemetry.update();
+        sleep(500);
+        drive.followTrajectory(traj2);
+        robot.arm.closePos();
+        telemetry.addData("Trajectory", " release cone");
+        telemetry.update();
+        drive.followTrajectory(traj3);
+        robot.arm.moveArmToLevel(2);
+        telemetry.addData("Trajectory", " moved to level 2");
+        telemetry.update();
+        sleep(500);
+        drive.turn(Math.toRadians(135));
+        drive.followTrajectory(traj4);
+        robot.arm.moveArmToLevel(6);
+        sleep(500);
+        robot.arm.openPos();
+        telemetry.addData("Trajectory", " moved to level 2.5 and pick up cone");
+        telemetry.update();
+        sleep(500);
+        robot.arm.moveArmToLevel(2);
+        telemetry.addData("Trajectory", " moved to level 2");
+        telemetry.update();
+        drive.followTrajectory(traj5);
+
+        //loop from here if necessary
+        drive.turn(Math.toRadians(-135));
+        robot.arm.moveArmToLevel(4);
+        telemetry.addData("Trajectory", " moved to level 4");
+        telemetry.update();
+        sleep(500);
+        drive.followTrajectory(traj6);
+        robot.arm.closePos();
+        telemetry.addData("Trajectory", " release cone");
+        telemetry.update();
+        drive.followTrajectory(traj7);
+        robot.arm.moveArmToLevel(2);
+        telemetry.addData("Trajectory", " moved to level 2");
+        telemetry.update();
+        sleep(500);
+        drive.turn(Math.toRadians(135));
+        telemetry.addData("Trajectory", " moved to level 2");
+        telemetry.update();
+
+        //going to found location
+        if(locationToPark != null) {
+            telemetry.addData("Going to parking location:", locationToPark.toString());
             telemetry.update();
-            sleep(500);
-            drive.followTrajectory(traj6);
-            robot.arm.closePos();
-            telemetry.addData("Trajectory", " release cone");
-            telemetry.update();
-            drive.followTrajectory(traj7);
-            robot.arm.moveArmToLevel(2);
-            telemetry.addData("Trajectory", " moved to level 2");
-            telemetry.update();
-            sleep(500);
-            drive.turn(Math.toRadians(135));
             drive.followTrajectory(traj8);
-            robot.arm.moveArmToLevel(6);
-            sleep(500);
-            robot.arm.openPos();
-            telemetry.addData("Trajectory", " moved to level 2.5 and pick up cone");
+        } else {
+            telemetry.addData(">>", "No location to park found!");
             telemetry.update();
-            sleep(500);
-            robot.arm.moveArmToLevel(2);
-            telemetry.addData("Trajectory", " moved to level 2");
-            telemetry.update();
-            drive.followTrajectory(traj9);
+        }
     }
+
+    private Runnable parkingLocationFinderRunnable = () -> {
+        //driveForwardByInches(4, robot, DejaVuBot.TPS);
+        //Find the level in 10 attempts. If not detected set level to 3.
+        if (opModeIsActive() && tfod != null) {
+            telemetry.addData(">", "Detecting parking location using vision");
+            telemetry.update();
+            locationToPark = findParking();
+            telemetry.addData("Found parking", locationToPark);
+            if(locationToPark != null){
+                Log.i(TAG, " Found parking ="+ locationToPark);
+            }
+            if(locationToPark == location1) {
+                telemetry.addLine(" location1");
+            } else if(locationToPark == location2) {
+                telemetry.addLine(" location2");
+            } else if(locationToPark == location3) {
+                telemetry.addLine(" location3");
+            } else {
+                telemetry.addLine(" UNKNOWN - defaulting to location2");
+                locationToPark = location2;
+            }
+            telemetry.update();
+        } else{
+            telemetry.addData(">", "Could not init vision code - defaulting to TOP");
+            telemetry.update();
+            locationToPark = location2;
+        }
+        Log.d(TAG, "Thread 1 finishing up");
+    };
 
 }
 

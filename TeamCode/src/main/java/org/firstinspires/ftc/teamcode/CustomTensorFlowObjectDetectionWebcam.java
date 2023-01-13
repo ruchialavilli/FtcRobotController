@@ -61,15 +61,13 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
      * Here we assume it's an Asset.    Also see method initTfod() below .
      */
     //private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
-    private static final String TFOD_MODEL_ASSET  = "CustomTeamModel.tflite";
-    //private static final String TFOD_MODEL_ASSET  = "CustomTeamModel2.tflite"; //Training 2023 Color
-    //private static final String TFOD_MODEL_ASSET  = "CustomTeamModel3.tflite"; //Training 2023 Color 2
+    private static final String TFOD_MODEL_ASSET  = "CustomTeamModel5.tflite"; //Training 2023 Color 3
 
 
     private static final String[] LABELS = {
-            "1 GearC",
-            "2 LaptopC",
-            "3 ToolC"
+            "0 Gear",
+            "1 PC",
+            "2 Tools"
     };
 
     /*
@@ -180,9 +178,9 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0f;
+        tfodParameters.minResultConfidence = 0.50f;
         tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 300;
+        tfodParameters.inputSize = 320;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 
         // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
