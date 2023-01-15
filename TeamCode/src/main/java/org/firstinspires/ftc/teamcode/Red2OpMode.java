@@ -40,7 +40,7 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
          **/
         if (tfod != null) {
             tfod.activate();
-            tfod.setZoom(2.0, 16.0/9.0);
+            tfod.setZoom(2.5, 16.0/9.0);
         }
 
         //the auton file used for Red2 and Blue1

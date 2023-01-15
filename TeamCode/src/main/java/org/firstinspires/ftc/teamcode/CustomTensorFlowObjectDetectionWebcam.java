@@ -38,6 +38,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,15 +66,19 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
      */
     //private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
     //private static final String TFOD_MODEL_ASSET  = "CustomTeamModel5.tflite"; //Training 2023 Color 3
-    private static final String TFOD_MODEL_ASSET  = "CustomTeamModel6.tflite"; //Training 2023 Color 4
+    //private static final String TFOD_MODEL_ASSET  = "CustomTeamModel6.tflite"; //Training 2023 Color 4
     //private static final String TFOD_MODEL_ASSET  = "FinalModel.tflite"; //CompTraining2
+    private static final String TFOD_MODEL_ASSET  = "ssd_mobilenet_v1_1_metadata_1.tflite";
 
-
+    //    private static final String[] LABELS = {
+//            "0 Gear",
+//            "1 PC",
+//            "2 Tools"
+//    };
     private static final String[] LABELS = {
-            "0 Gear",
-            "1 PC",
-            "2 Tools"
+            "person","bicycle","car","motorcycle","airplane","bus","train","truck","boat","traffic light","fire hydrant","???","stop sign","parking meter","bench","bird","cat","dog","horse","sheep","cow","elephant","bear","zebra","giraffe","???","backpack","umbrella","???","???","handbag","tie","suitcase","frisbee","skis","snowboard","sports ball","kite","baseball bat","baseball glove","skateboard","surfboard","tennis racket","bottle","???","wine glass","cup","fork","knife","spoon","bowl","banana","apple","sandwich","orange","broccoli","carrot","hot dog","pizza","donut","cake","chair","couch","potted plant","bed","???","dining table","???","???","toilet","???","tv","laptop","mouse","remote","keyboard","cell phone","microwave","oven","toaster","sink","refrigerator","???","book","clock","vase","scissors","teddy bear","hair drier","toothbrush"
     };
+
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -120,7 +128,7 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(1.0, 16.0/9.0);
+            tfod.setZoom(2.5 , 16.0/9.0);
         }
 
         /** Wait for the game to begin */
@@ -182,7 +190,7 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.50f;
         tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 320;
+        tfodParameters.inputSize = 360;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 
         // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
