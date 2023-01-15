@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Base64;
 import android.util.Log;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -17,6 +19,14 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private Thread parkingLocationFinderThread;
     String name = "Red2Opmode";
+
+    // parking location 1
+    // pc
+    protected static Vector2d location1 = new Vector2d(-14, 55);
+    // gear
+    protected static Vector2d location2 = new Vector2d(-14, 32.25);
+    // tool
+    protected static Vector2d location3 = new Vector2d(-14, 8);
 
     public void runOpMode() throws InterruptedException {
 
@@ -39,8 +49,8 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         robot.arm = new DejaVuArm();
         robot.arm.init(hardwareMap, true);
 
-
-        Pose2d startPose = new Pose2d(-63.375, 32, Math.toRadians(0));
+//an inch too close to 0
+        Pose2d startPose = new Pose2d(-63.375, 32, Math.toRadians(0));//todo: measure on competition field
         drive.setPoseEstimate(startPose);
 
         Trajectory traj0 = drive.trajectoryBuilder(startPose)
@@ -51,7 +61,7 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
                 .lineTo(new Vector2d(-14, 32))
                 .build();
 
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(-45))))
+        Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(-47))))
                 .forward(12)
                 .build();
 
@@ -59,7 +69,7 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
                 .back(12)
                 .build();
 
-        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(135))))
+        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(137))))
                 .lineTo(new Vector2d(-14, 59))
                 .build();
 
@@ -69,13 +79,14 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
 
         //looping code trajectories...
 
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(-135))))
+        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(-137))))
                 .forward(12)
                 .build();
 
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
                 .back(12)
                 .build();
+
 
 //        Trajectory traj8 = drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(135))))
 //                .lineTo(new Vector2d(-14, 59))
@@ -102,9 +113,6 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         parkingLocationFinderThread.join();
         Log.d(TAG, "thread joins complete");
 
-        Trajectory traj8 = drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(135))))
-                .lineTo(locationToPark)
-                .build();
 
         // always deactivate
         if (tfod != null) {
@@ -117,25 +125,32 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         sleep(500);
         robot.arm.moveArmToLevel(2);
         sleep(500);
+        if (isStopRequested()) return;
         drive.followTrajectory(traj0);
+        if (isStopRequested()) return;
         drive.followTrajectory(traj1);
-        drive.turn(Math.toRadians(-45));
+        if (isStopRequested()) return;
+        drive.turn(Math.toRadians(-47));
         robot.arm.moveArmToLevel(4);
         telemetry.addData("Trajectory", " moved to level 4");
         telemetry.update();
+        if (isStopRequested()) return;
         sleep(500);
         drive.followTrajectory(traj2);
         robot.arm.closePos();
         telemetry.addData("Trajectory", " release cone");
         telemetry.update();
+        if (isStopRequested()) return;
         drive.followTrajectory(traj3);
         robot.arm.moveArmToLevel(2);
         telemetry.addData("Trajectory", " moved to level 2");
         telemetry.update();
+        if (isStopRequested()) return;
         sleep(500);
-        drive.turn(Math.toRadians(135));
+        drive.turn(Math.toRadians(137));
         drive.followTrajectory(traj4);
         robot.arm.moveArmToLevel(6);
+        if (isStopRequested()) return;
         sleep(500);
         robot.arm.openPos();
         telemetry.addData("Trajectory", " moved to level 2.5 and pick up cone");
@@ -145,35 +160,38 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         telemetry.addData("Trajectory", " moved to level 2");
         telemetry.update();
         drive.followTrajectory(traj5);
-
+        if (isStopRequested()) return;
         //loop from here if necessary
-        drive.turn(Math.toRadians(-135));
+        drive.turn(Math.toRadians(-137));
         robot.arm.moveArmToLevel(4);
         telemetry.addData("Trajectory", " moved to level 4");
         telemetry.update();
+        if (isStopRequested()) return;
         sleep(500);
         drive.followTrajectory(traj6);
         robot.arm.closePos();
         telemetry.addData("Trajectory", " release cone");
         telemetry.update();
+        if (isStopRequested()) return;
         drive.followTrajectory(traj7);
         robot.arm.moveArmToLevel(2);
         telemetry.addData("Trajectory", " moved to level 2");
         telemetry.update();
         sleep(500);
-        drive.turn(Math.toRadians(135));
+
+        drive.turn(Math.toRadians(-43));
         telemetry.addData("Trajectory", " moved to level 2");
         telemetry.update();
-
+        if (isStopRequested()) return;
         //going to found location
-        if(locationToPark != null) {
-            telemetry.addData("Going to parking location:", locationToPark.toString());
+        telemetry.addData("Going to parking location:", locationToPark.toString());
             telemetry.update();
-            drive.followTrajectory(traj8);
-        } else {
-            telemetry.addData(">>", "No location to park found!");
-            telemetry.update();
-        }
+            drive.followTrajectory(
+                    drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(-42.5))))
+                    .lineTo(BaseAutoVisionOpMode.locationToPark)
+                    .build());
+        robot.arm.moveArmToLevel(0);
+
     }
 
     private Runnable parkingLocationFinderRunnable = () -> {
@@ -182,7 +200,21 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         if (opModeIsActive() && tfod != null) {
             telemetry.addData(">", "Detecting parking location using vision");
             telemetry.update();
-            locationToPark = findParking();
+            findParking();
+            switch(parkingPosition){
+                case 1:
+                    locationToPark = location1;
+                    break;
+                case 2:
+                    locationToPark = location2;
+                    break;
+                case 3:
+                    locationToPark = location3;
+                    break;
+                default:
+                    locationToPark = location2;
+                    break;
+            }
             telemetry.addData("Found parking", locationToPark);
             if(locationToPark != null){
                 Log.i(TAG, " Found parking ="+ locationToPark);

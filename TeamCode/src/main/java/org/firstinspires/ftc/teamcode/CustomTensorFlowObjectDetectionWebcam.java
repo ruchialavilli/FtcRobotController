@@ -61,7 +61,9 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
      * Here we assume it's an Asset.    Also see method initTfod() below .
      */
     //private static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
-    private static final String TFOD_MODEL_ASSET  = "CustomTeamModel5.tflite"; //Training 2023 Color 3
+    //private static final String TFOD_MODEL_ASSET  = "CustomTeamModel5.tflite"; //Training 2023 Color 3
+    private static final String TFOD_MODEL_ASSET  = "CustomTeamModel6.tflite"; //Training 2023 Color 4
+    //private static final String TFOD_MODEL_ASSET  = "FinalModel.tflite"; //CompTraining2
 
 
     private static final String[] LABELS = {
@@ -118,7 +120,7 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(2.0, 16.0/9.0);
+            tfod.setZoom(1.0, 16.0/9.0);
         }
 
         /** Wait for the game to begin */

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -20,6 +21,7 @@ public class GamePadOpMode extends LinearOpMode {
     static final double     TURN_SPEED    = 0.5;
     private Thread gamepad1Thread;
     private Thread gamepad2Thread;
+    private Thread pickUpThread;
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap,false);
@@ -43,10 +45,17 @@ public class GamePadOpMode extends LinearOpMode {
         gamepad2Thread = new Thread(gp2Runnable);
         gamepad2Thread.start();
 
+        Log.d(TAG, "starting thread 3");
+        pickUpThread = new Thread(pickupRunnable);
+        pickUpThread.start();
+
+
+
         // now wait for the threads to finish before returning from this method
         Log.d(TAG, "waiting for threads to finish...");
         gamepad1Thread.join();
         gamepad2Thread.join();
+        pickUpThread.join();
         Log.d(TAG, "thread joins complete");
 
         // Step 4:  Stop and close the claw.
@@ -64,11 +73,11 @@ public class GamePadOpMode extends LinearOpMode {
             double turnPower;
 
             while (opModeIsActive()) {
-                drive = (gamepad1.left_stick_y)*0.7;
-                turn = (-gamepad1.left_stick_x)*0.7;
+                drive = (gamepad1.left_stick_y)*0.65;
+                turn = (-gamepad1.left_stick_x)*0.65;
                 leftPower = Range.clip(drive + turn, -1.0, 1.0);
                 rightPower = Range.clip(drive - turn, -1.0, 1.0);
-                turnPower = Range.clip((-gamepad1.right_stick_x)*0.75, -1.0, 1.0);
+                turnPower = Range.clip((-gamepad1.right_stick_x)*0.7, -1.0, 1.0);
 
 //                telemetry.addData("GP1 drive set to:", "" + drive);
 //                telemetry.addData("GP1 turn set to:", "" + turn);
@@ -81,7 +90,7 @@ public class GamePadOpMode extends LinearOpMode {
 
                 if (gamepad1.right_stick_x != 0) {
                     robot.turnRobot(turnPower);
-                }  else {
+                } else {
                     robot.leftFrontMotor.setPower(leftPower);
                     robot.rightFrontMotor.setPower(rightPower);
                     robot.rightBackMotor.setPower(leftPower);
@@ -113,27 +122,25 @@ public class GamePadOpMode extends LinearOpMode {
                     telemetry.addData("GP2 Input", "B");
                     telemetry.addData("GP2 Input level", "2 - Level 1");
                     robot.arm.moveArmToLevel(2);
-                }else if (gamepad2.a) {
+                } else if (gamepad2.a) {
                     telemetry.addData("GP2 Input", "A");
                     telemetry.addData("GP2 Input level", "1 - Picking Up");
                     robot.arm.moveArmToLevel(1);
-                }else if(gamepad2.right_bumper){
+                } else if(gamepad2.right_bumper){
                     telemetry.addData("GP2 Input", "Right Bumper");
                     telemetry.addData("GP2 Input level", "0 - Home");
                     robot.arm.moveArmToLevel(0);
-                }else {
+                } else {
                     telemetry.addData("GP2 Input", "Unknown Ignoring");
                 }
 
-                if (gamepad2.dpad_down) {
-                    robot.arm.closePos();
-                }
-
-                if (gamepad2.dpad_up) {
-                    robot.arm.openPos();
-                }
-
-
+//                if (gamepad2.dpad_down) {
+//                    robot.arm.closePos();
+//                }
+//
+//                if (gamepad2.dpad_up) {
+//                    robot.arm.openPos();
+//                }
 
                 telemetry.addData("GP2 Status", "Completed");
 //                telemetry.addData("GP2 armMotor encoder value", robot.arm.armMotor.getCurrentPosition());
@@ -142,6 +149,24 @@ public class GamePadOpMode extends LinearOpMode {
                 telemetry.update();
             } //end of while loop
             Log.d(TAG, "Thread 2 finishing up");
+        }
+    };
+
+    private Runnable pickupRunnable = new Runnable() {
+        public void run() {
+            while (opModeIsActive()) {
+                if (gamepad2.dpad_down) {
+                    telemetry.addData("GP2 Status", "Dropping");
+                    robot.arm.closePos();
+                }
+
+                if (gamepad2.dpad_up) {
+                    telemetry.addData("GP2 Status", "Picking up");
+                    robot.arm.openPos();
+                }
+                telemetry.update();
+            } //end of while loop
+            Log.d(TAG, "Thread 3 finishing up");
         }
     };
 }
