@@ -56,7 +56,7 @@ public class Blue1OpMode extends BaseAutoVisionOpMode {
                 .build();
 
         Trajectory traj1 = drive.trajectoryBuilder(traj0.end())
-                .lineTo(new Vector2d(-14, 32))
+                .lineTo(new Vector2d(-12, 32))
                 .build();
 
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(-47))))
@@ -68,11 +68,11 @@ public class Blue1OpMode extends BaseAutoVisionOpMode {
                 .build();
 
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(137))))
-                .lineTo(new Vector2d(-14, 59))
+                .lineTo(new Vector2d(-12, 60))
                 .build();
 
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                .lineTo(new Vector2d(-14, 32))
+                .lineTo(new Vector2d(-12, 32))
                 .build();
 
         //looping code trajectories...
@@ -136,6 +136,8 @@ public class Blue1OpMode extends BaseAutoVisionOpMode {
         sleep(500);
         drive.followTrajectory(traj2);
         robot.arm.closePos();
+        sleep(500);
+
         telemetry.addData("Trajectory", " release cone");
         telemetry.update();
         if (isStopRequested()) return;
@@ -168,6 +170,8 @@ public class Blue1OpMode extends BaseAutoVisionOpMode {
         sleep(500);
         drive.followTrajectory(traj6);
         robot.arm.closePos();
+        sleep(500);
+
         telemetry.addData("Trajectory", " release cone");
         telemetry.update();
         if (isStopRequested()) return;

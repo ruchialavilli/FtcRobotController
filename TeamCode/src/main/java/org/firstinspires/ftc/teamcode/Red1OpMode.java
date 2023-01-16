@@ -20,11 +20,11 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
 
     // parking location 1
     // pc
-    protected static Vector2d location1 = new Vector2d(11, 8);
+    protected static Vector2d location1 = new Vector2d(9, 8);
     // gear
-    protected static Vector2d location2 = new Vector2d(11, 32.25);
+    protected static Vector2d location2 = new Vector2d(9, 32.25);
     // tool
-    protected static Vector2d location3 = new Vector2d(11, 55);
+    protected static Vector2d location3 = new Vector2d(9, 55);
 
     public void runOpMode() throws InterruptedException {
 
@@ -56,10 +56,10 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
                 .build();
 
         Trajectory traj1 = drive.trajectoryBuilder(traj0.end())
-                .lineTo(new Vector2d(11, 32))
+                .lineTo(new Vector2d(9, 32))
                 .build();
 
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(42))))
+        Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(41))))
                 .forward(12)
                 .build();
 
@@ -67,17 +67,17 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
                 .back(12)
                 .build();
 
-        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(-132))))
-                .strafeTo(new Vector2d(11, 59))
+        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(-131))))
+                .strafeTo(new Vector2d(9, 60))
                 .build();
 
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                .lineTo(new Vector2d(11, 32))
+                .lineTo(new Vector2d(9, 32))
                 .build();
 
         //looping code here
 
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(132))))
+        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(131))))
                 .forward(12)
                 .build();
 
@@ -114,7 +114,7 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
         if (isStopRequested()) return;
         drive.followTrajectory(traj0);
         drive.followTrajectory(traj1);
-        drive.turn(Math.toRadians(42));
+        drive.turn(Math.toRadians(41));
         if (isStopRequested()) return;
         robot.arm.moveArmToLevel(4);
         telemetry.addData("Trajectory", " moved to level 4");
@@ -123,6 +123,8 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
         drive.followTrajectory(traj2);
         if (isStopRequested()) return;
         robot.arm.closePos();
+        sleep(500);
+
         telemetry.addData("Trajectory", " release cone");
         telemetry.update();
         drive.followTrajectory(traj3);
@@ -131,7 +133,7 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
         telemetry.addData("Trajectory", " moved to level 2");
         telemetry.update();
         sleep(500);
-        drive.turn(Math.toRadians(-132));
+        drive.turn(Math.toRadians(-131));
         drive.followTrajectory(traj4);
         if (isStopRequested()) return;
         robot.arm.moveArmToLevel(6);
@@ -147,13 +149,14 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
         drive.followTrajectory(traj5);
         if (isStopRequested()) return;
 //loop from here if necessary
-        drive.turn(Math.toRadians(132));
+        drive.turn(Math.toRadians(131));
         robot.arm.moveArmToLevel(4);
         telemetry.addData("Trajectory", " moved to level 4");
         telemetry.update();
         sleep(500);
         drive.followTrajectory(traj6);
         robot.arm.closePos();
+        sleep(500);
         telemetry.addData("Trajectory", " release cone");
         telemetry.update();
         drive.followTrajectory(traj7);
@@ -161,7 +164,7 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
         telemetry.addData("Trajectory", " moved to level 2");
         telemetry.update();
         sleep(500);
-        drive.turn(Math.toRadians(48));
+        drive.turn(Math.toRadians(49));
         telemetry.addData("Trajectory", " moved to level 2");
         telemetry.update();
 
@@ -169,7 +172,7 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
         telemetry.addData("Going to parking location:", locationToPark.toString());
         telemetry.update();
         drive.followTrajectory(
-                drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(48))))
+                drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(49))))
                         .lineTo(BaseAutoVisionOpMode.locationToPark)
                         .build());
         robot.arm.moveArmToLevel(0);

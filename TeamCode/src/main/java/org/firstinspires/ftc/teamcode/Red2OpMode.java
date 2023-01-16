@@ -58,10 +58,10 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
                 .build();
 
         Trajectory traj1 = drive.trajectoryBuilder(traj0.end())
-                .lineTo(new Vector2d(-14, 32))
+                .lineTo(new Vector2d(-12, 32))
                 .build();
 
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(-47))))
+        Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(-48))))
                 .forward(12)
                 .build();
 
@@ -69,17 +69,17 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
                 .back(12)
                 .build();
 
-        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(137))))
-                .lineTo(new Vector2d(-14, 59))
+        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(138))))
+                .lineTo(new Vector2d(-12, 60))
                 .build();
 
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                .lineTo(new Vector2d(-14, 32))
+                .lineTo(new Vector2d(-12, 32))
                 .build();
 
         //looping code trajectories...
 
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(-137))))
+        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(-138))))
                 .forward(12)
                 .build();
 
@@ -130,7 +130,7 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         if (isStopRequested()) return;
         drive.followTrajectory(traj1);
         if (isStopRequested()) return;
-        drive.turn(Math.toRadians(-47));
+        drive.turn(Math.toRadians(-48));
         robot.arm.moveArmToLevel(4);
         telemetry.addData("Trajectory", " moved to level 4");
         telemetry.update();
@@ -138,6 +138,7 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         sleep(500);
         drive.followTrajectory(traj2);
         robot.arm.closePos();
+        sleep(500);
         telemetry.addData("Trajectory", " release cone");
         telemetry.update();
         if (isStopRequested()) return;
@@ -147,7 +148,7 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         telemetry.update();
         if (isStopRequested()) return;
         sleep(500);
-        drive.turn(Math.toRadians(137));
+        drive.turn(Math.toRadians(138));
         drive.followTrajectory(traj4);
         robot.arm.moveArmToLevel(6);
         if (isStopRequested()) return;
@@ -162,7 +163,7 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         drive.followTrajectory(traj5);
         if (isStopRequested()) return;
         //loop from here if necessary
-        drive.turn(Math.toRadians(-137));
+        drive.turn(Math.toRadians(-138));
         robot.arm.moveArmToLevel(4);
         telemetry.addData("Trajectory", " moved to level 4");
         telemetry.update();
@@ -170,6 +171,7 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         sleep(500);
         drive.followTrajectory(traj6);
         robot.arm.closePos();
+        sleep(500);
         telemetry.addData("Trajectory", " release cone");
         telemetry.update();
         if (isStopRequested()) return;
@@ -179,7 +181,7 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         telemetry.update();
         sleep(500);
 
-        drive.turn(Math.toRadians(-43));
+        drive.turn(Math.toRadians(-42));
         telemetry.addData("Trajectory", " moved to level 2");
         telemetry.update();
         if (isStopRequested()) return;
@@ -187,7 +189,7 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         telemetry.addData("Going to parking location:", locationToPark.toString());
             telemetry.update();
             drive.followTrajectory(
-                    drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(-42.5))))
+                    drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(-42))))
                     .lineTo(BaseAutoVisionOpMode.locationToPark)
                     .build());
         robot.arm.moveArmToLevel(0);
