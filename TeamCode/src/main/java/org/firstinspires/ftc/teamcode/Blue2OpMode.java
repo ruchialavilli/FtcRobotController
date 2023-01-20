@@ -19,11 +19,11 @@ public class Blue2OpMode extends BaseAutoVisionOpMode {
 
     // parking location 1
     // pc
-    protected static Vector2d location1 = new Vector2d(9, 8);
+    protected static Vector2d location1 = new Vector2d(7, 8);
     // gear
-    protected static Vector2d location2 = new Vector2d(9, 32.25);
+    protected static Vector2d location2 = new Vector2d(7, 32.25);
     // tool
-    protected static Vector2d location3 = new Vector2d(9, 55);
+    protected static Vector2d location3 = new Vector2d(7, 55);
 
     public void runOpMode() throws InterruptedException {
 
@@ -76,7 +76,7 @@ public class Blue2OpMode extends BaseAutoVisionOpMode {
 
         //looping code here
 
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(131))))
+        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(128))))
                 .forward(12)
                 .build();
 
@@ -147,7 +147,7 @@ public class Blue2OpMode extends BaseAutoVisionOpMode {
         drive.followTrajectory(traj5);
         if (isStopRequested()) return;
 //loop from here if necessary
-        drive.turn(Math.toRadians(131));
+        drive.turn(Math.toRadians(128));
         robot.arm.moveArmToLevel(4);
         telemetry.addData("Trajectory", " moved to level 4");
         telemetry.update();
@@ -162,7 +162,7 @@ public class Blue2OpMode extends BaseAutoVisionOpMode {
         telemetry.addData("Trajectory", " moved to level 2");
         telemetry.update();
         sleep(500);
-        drive.turn(Math.toRadians(49));
+        drive.turn(Math.toRadians(52));
         telemetry.addData("Trajectory", " moved to level 2");
         telemetry.update();
 
@@ -170,7 +170,7 @@ public class Blue2OpMode extends BaseAutoVisionOpMode {
         telemetry.addData("Going to parking location:", locationToPark.toString());
         telemetry.update();
         drive.followTrajectory(
-                drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(49))))
+                drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(53))))
                         .lineTo(BaseAutoVisionOpMode.locationToPark)
                         .build());
         robot.arm.moveArmToLevel(0);

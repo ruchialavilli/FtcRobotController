@@ -8,23 +8,22 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.auto22.BaseAutoOpMode;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Autonomous(name = "Red1OpMode", group = "AutoOpModes")
 public class Red1OpMode extends BaseAutoVisionOpMode {
     private String TAG = "Red1OpMode";
     private ElapsedTime runtime = new ElapsedTime();
-    String name = "Red1 Opmode";
+    String name = "Red1OpMode";
     private Thread parkingLocationFinderThread;
 
     // parking location 1
     // pc
-    protected static Vector2d location1 = new Vector2d(9, 8);
+    protected static Vector2d location1 = new Vector2d(7, 8);
     // gear
-    protected static Vector2d location2 = new Vector2d(9, 32.25);
+    protected static Vector2d location2 = new Vector2d(7, 32.25);
     // tool
-    protected static Vector2d location3 = new Vector2d(9, 55);
+    protected static Vector2d location3 = new Vector2d(7, 55);
 
     public void runOpMode() throws InterruptedException {
 
@@ -77,7 +76,7 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
 
         //looping code here
 
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(131))))
+        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(128))))
                 .forward(12)
                 .build();
 
@@ -123,10 +122,9 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
         drive.followTrajectory(traj2);
         if (isStopRequested()) return;
         robot.arm.closePos();
-        sleep(500);
-
         telemetry.addData("Trajectory", " release cone");
         telemetry.update();
+        sleep(500);
         drive.followTrajectory(traj3);
         if (isStopRequested()) return;
         robot.arm.moveArmToLevel(2);
@@ -149,22 +147,22 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
         drive.followTrajectory(traj5);
         if (isStopRequested()) return;
 //loop from here if necessary
-        drive.turn(Math.toRadians(131));
+        drive.turn(Math.toRadians(128));
         robot.arm.moveArmToLevel(4);
         telemetry.addData("Trajectory", " moved to level 4");
         telemetry.update();
         sleep(500);
         drive.followTrajectory(traj6);
         robot.arm.closePos();
-        sleep(500);
         telemetry.addData("Trajectory", " release cone");
         telemetry.update();
+        sleep(500);
         drive.followTrajectory(traj7);
         robot.arm.moveArmToLevel(2);
         telemetry.addData("Trajectory", " moved to level 2");
         telemetry.update();
         sleep(500);
-        drive.turn(Math.toRadians(49));
+        drive.turn(Math.toRadians(52));
         telemetry.addData("Trajectory", " moved to level 2");
         telemetry.update();
 
@@ -172,7 +170,7 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
         telemetry.addData("Going to parking location:", locationToPark.toString());
         telemetry.update();
         drive.followTrajectory(
-                drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(49))))
+                drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(53))))
                         .lineTo(BaseAutoVisionOpMode.locationToPark)
                         .build());
         robot.arm.moveArmToLevel(0);
