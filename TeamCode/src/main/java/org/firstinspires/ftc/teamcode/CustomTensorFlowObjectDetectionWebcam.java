@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -56,6 +58,8 @@ import java.util.List;
  */
 @TeleOp(name = "Custom TensorFlow Object Detection Webcam", group = "Concept")
 public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
+
+    private static final String TAG = "TensorFlow";
 
     /*
      * Specify the source for the Tensor Flow Model.
@@ -94,6 +98,7 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
      */
     private static final String VUFORIA_KEY =
             "AW9JKyj/////AAABmX2UV/5fn04JpsRM9uLXuEYQW29RXmviJEnGvXKmVlhEC3qszm0BbEJjR7kjfCbN3tHX37Pyei+8GICDehSPByjRlHFSf0Vz1NFx3go62FfegYiyB3/vT+7OnT8y2hCNHOlj7RypmGPS10rPpvqJxHJzs1Mz2Tt/HARIeeSiM9eO+nHisES89lFGaiyR1dpjcKLoXteIm6U8vzL/res0hm5tKwuJnWb0Ch8H5u0Vb2k1DnAMAnQwGiPyBn1gSwnQ8yH7Ro9ocO0Z3PCNBTvhh8X7QqICk9Bdg4lHQHxQ0WYTjbIlKUDTHvsQ+6QX7Mn8TzZVOQBo0DsFrrVzQIkrw8TFGRC1qp1RB8JjvgmHmif0";
+
 
 
     /**
@@ -144,21 +149,22 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
                         telemetry.addData("# Objects Detected", updatedRecognitions.size());
-
-                        // step through the list of recognitions and display image position/size information for each one
-                        // Note: "Image number" refers to the randomized image orientation/number
-                        for (Recognition recognition : updatedRecognitions) {
-                            double col = (recognition.getLeft() + recognition.getRight()) / 2 ;
-                            double row = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-                            double width  = Math.abs(recognition.getRight() - recognition.getLeft()) ;
-                            double height = Math.abs(recognition.getTop()  - recognition.getBottom()) ;
-
-                            telemetry.addData(""," ");
-                            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
-                            telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
-                            telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
-                        }
                         telemetry.update();
+                        findParking();
+//                        // step through the list of recognitions and display image position/size information for each one
+//                        // Note: "Image number" refers to the randomized image orientation/number
+//                        for (Recognition recognition : updatedRecognitions) {
+//                            double col = (recognition.getLeft() + recognition.getRight()) / 2 ;
+//                            double row = (recognition.getTop()  + recognition.getBottom()) / 2 ;
+//                            double width  = Math.abs(recognition.getRight() - recognition.getLeft()) ;
+//                            double height = Math.abs(recognition.getTop()  - recognition.getBottom()) ;
+//
+//                            telemetry.addData(""," ");
+//                            telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100 );
+//                            telemetry.addData("- Position (Row/Col)","%.0f / %.0f", row, col);
+//                            telemetry.addData("- Size (Width/Height)","%.0f / %.0f", width, height);
+//                            telemetry.update();
+//                        }
                     }
                 }
             }
@@ -197,5 +203,56 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
         // Use loadModelFromFile() if you have downloaded a custom team model to the Robot Controller's FLASH.
         //tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
+    }
+
+    protected void findParking() {
+        //TODO - is sleep needed ?
+        sleep(500);
+        int teddyCount = 0;
+        int trafficCount = 0;
+        int stopCount = 0;
+        for(int i = 0; i < 3; i++) {
+            List<Recognition> updatedRecognitions = tfod.getRecognitions();//tfod.getUpdatedRecognitions();
+            if (updatedRecognitions != null && updatedRecognitions.size() > 0) {
+                telemetry.addData("# Objects Detected", updatedRecognitions.size());
+                // step through the list of recognitions and display image position/size information for each one
+                // Note: "Image number" refers to the randomized image orientation/number
+                for (Recognition recognition : updatedRecognitions) {
+                    double col = (recognition.getLeft() + recognition.getRight()) / 2;
+                    double row = (recognition.getTop() + recognition.getBottom()) / 2;
+                    double width = Math.abs(recognition.getRight() - recognition.getLeft());
+                    double height = Math.abs(recognition.getTop() - recognition.getBottom());
+
+                    Log.d(TAG, "////************* " + i + ":");
+                    Log.d(TAG, String.format("Image %s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100));
+//                Log.d(TAG, String.format("- Position (Row/Col): %.0f / %.0f", row, col));
+//                Log.d(TAG, String.format("- Size (Width/Height): %.0f / %.0f", width, height));
+                    Log.d(TAG, "*************////");
+                    if (recognition.getLabel().equals("teddy bear")) {
+                        teddyCount++;
+                    } else if (recognition.getLabel().equals("traffic light")) {
+                        trafficCount++;
+                    } else if (recognition.getLabel().equals("stop sign")) {
+                        stopCount++;
+                    }
+                }
+                telemetry.addLine(String.format("Found Teddy(%d), Traffic(%d), Stop(%d)",teddyCount
+                        , trafficCount, stopCount));
+                Log.d(TAG, String.format("Found Teddy(%d), Traffic(%d), Stop(%d)", teddyCount
+                        , trafficCount, stopCount));
+                telemetry.update();
+            } else {
+                Log.d(TAG, "No more recognitions found!");
+            }
+        }
+        // if anything other than pc is found use it - otherwise pc
+        if( teddyCount > 0) {
+            telemetry.addLine("found teddy bear location 3");
+        } else if(stopCount > 0){
+            telemetry.addLine("found stop sign - location 1");
+        } else {
+            telemetry.addLine("found traffic lights - location 2");
+        }
+        telemetry.update();
     }
 }
