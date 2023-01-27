@@ -194,9 +194,9 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
             "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minResultConfidence = 0.50f;
+        tfodParameters.minResultConfidence = 0.40f;
         tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 360;
+        tfodParameters.inputSize = 330;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 
         // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
@@ -246,12 +246,12 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
             }
         }
         // if anything other than pc is found use it - otherwise pc
-        if( teddyCount > 0) {
-            telemetry.addLine("found teddy bear location 3");
+        if( trafficCount > 0) {
+            telemetry.addLine("found traffic lights - location 2");
         } else if(stopCount > 0){
             telemetry.addLine("found stop sign - location 1");
         } else {
-            telemetry.addLine("found traffic lights - location 2");
+            telemetry.addLine("found teddy bear location 3");
         }
         telemetry.update();
     }
