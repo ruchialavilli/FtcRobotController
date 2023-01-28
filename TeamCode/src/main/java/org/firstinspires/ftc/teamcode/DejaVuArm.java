@@ -29,14 +29,14 @@ public class DejaVuArm {
 
     //max rpm for our arm motor is 1,850, here we're using 1750 rpm
     public static double SLIDER_TPS = 2500.0; //5959.5 MAX
-    public static double SLIDER_TPS_DOWN = 2000.0;
+    public static double SLIDER_TPS_DOWN = 1500.0;
     static HashMap<Integer, Integer> level_map = new HashMap<>();
     {
-        level_map.put(0, 0);//ground
+        level_map.put(0, 11);//ground
         level_map.put(1, 400);//5 inches off the ground (pick up)
         level_map.put(2, 1250);//16 inches
-        level_map.put(3, 2150);// to be 26 inches
-        level_map.put(4, 3000);//to be 36 inches
+        level_map.put(3, 2100);// to be 26 inches
+        level_map.put(4, 2925);//to be 36 inches
         level_map.put(6, 485);//1 inches off the ground (auton)
 
 
