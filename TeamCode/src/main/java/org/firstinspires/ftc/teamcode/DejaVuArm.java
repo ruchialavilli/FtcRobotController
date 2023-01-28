@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
 import static java.lang.Thread.sleep;
+
+import android.util.Log;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -29,20 +32,18 @@ public class DejaVuArm {
 
     //max rpm for our arm motor is 1,850, here we're using 1750 rpm
     public static double SLIDER_TPS = 2500.0; //5959.5 MAX
-    public static double SLIDER_TPS_DOWN = 1500.0;
+    public static double SLIDER_TPS_DOWN = 2500.0;
     static HashMap<Integer, Integer> level_map = new HashMap<>();
+    private String TAG = "DejaVuArm";
+
     {
-        level_map.put(0, 11);//ground
-        level_map.put(1, 400);//5 inches off the ground (pick up)
-        level_map.put(2, 1250);//16 inches
-        level_map.put(3, 2100);// to be 26 inches
-        level_map.put(4, 2925);//to be 36 inches
-        level_map.put(6, 485);//1 inches off the ground (auton)
-
-
-
         //100 = 1 inch
-
+        level_map.put(0, 0 );//ground
+        level_map.put(1, 400);//5 inches off the ground (pick up)
+        level_map.put(2, 1250);//16 inches - level 1
+        level_map.put(3, 2100);// to be 26 inches - level 2
+        level_map.put(4, 2925);//to be 36 inches - level 3
+        level_map.put(6, 485);//1 inches off the ground (auton)
     }
 
     private int currentLevel = 0;
@@ -58,6 +59,7 @@ public class DejaVuArm {
         this.isAuton = isAuton;
         this.hwMap = hMap;
         this.armMotor = hwMap.get(DcMotorEx.class, "armMotor");
+        armMotor.resetDeviceConfigurationForOpMode();
         armMotor.setDirection(DcMotorEx.Direction.REVERSE);
         this.gripperServo = hwMap.get(Servo.class, "gripperServo");
         gripperServo.resetDeviceConfigurationForOpMode();
@@ -74,6 +76,7 @@ public class DejaVuArm {
         if(level != currentLevel) {
             //GO ONE LEVEL DOWN AT FULL speed\
             int height = level_map.get(level);
+            double speed = 0;
             //checking if going up
             sendToTelemetry("currentPosition:" + armMotor.getCurrentPosition());
             sendToTelemetry("setting to height:" + height);
@@ -82,14 +85,18 @@ public class DejaVuArm {
             sendToTelemetry("starting motor");
             this.armMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             while (armMotor.isBusy()) {
-                if (height > currentLevel) {
+                if (level > currentLevel) {
                     armMotor.setVelocity(SLIDER_TPS);
                 }else{
                     armMotor.setVelocity(SLIDER_TPS_DOWN);
                 }
-                armMotor.setPower(1);
+                armMotor.setPower(0.8);
+                Log.d(TAG, "motor going to level (" + level + ") expected height ("
+                        + height + ") current height:" + armMotor.getTargetPosition());
             }
-            sendToTelemetry("motor completed");
+            sendToTelemetry("motor completed to level (" + level + ") current height:" + armMotor.getTargetPosition());
+            Log.d(TAG, "motor completed to level (" + level + ") expected height ("
+                    + height + ") current height:" + armMotor.getTargetPosition());
             //motor done/break
             sendToTelemetry("Applying Brakes!");
             armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -125,7 +132,7 @@ public class DejaVuArm {
     // pick up object
     public void openPos() {
         gripperServo.setDirection(Servo.Direction.FORWARD);
-        gripperServo.setPosition(0.2);
+        gripperServo.setPosition(0.27);
         sendToTelemetry("Sending to Pos Servo:" + gripperServo.getPosition());
     }
 
