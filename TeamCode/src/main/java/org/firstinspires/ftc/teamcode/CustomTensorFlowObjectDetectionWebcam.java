@@ -196,7 +196,7 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.40f;
         tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 330;
+        tfodParameters.inputSize = 345;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 
         // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
