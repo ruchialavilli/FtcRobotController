@@ -59,14 +59,19 @@ public class DejaVuArm {
         this.isAuton = isAuton;
         this.hwMap = hMap;
         this.armMotor = hwMap.get(DcMotorEx.class, "armMotor");
-        armMotor.resetDeviceConfigurationForOpMode();
-        armMotor.setDirection(DcMotorEx.Direction.REVERSE);
+        resetDCMotor();
         this.gripperServo = hwMap.get(Servo.class, "gripperServo");
         gripperServo.resetDeviceConfigurationForOpMode();
         double zeroPosServo = gripperServo.getPosition();
         //this.openPos();
         this.moveArmToLevel(0);
         this.currentLevel = 0;
+    }
+
+    private void resetDCMotor(){
+        Log.d(TAG, "Resetting DC Motor state");
+        armMotor.resetDeviceConfigurationForOpMode();
+        armMotor.setDirection(DcMotorEx.Direction.REVERSE);
     }
 
 
@@ -76,7 +81,15 @@ public class DejaVuArm {
         if(level != currentLevel) {
             //GO ONE LEVEL DOWN AT FULL speed\
             int height = level_map.get(level);
-            double speed = 0;
+            if(level < 4 && (level < currentLevel)) {
+                height+=20;
+            }
+            // set the zero power behavior
+//            if(level == 0){
+//                armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+//            } else {
+                armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+//            }
             //checking if going up
             sendToTelemetry("currentPosition:" + armMotor.getCurrentPosition());
             sendToTelemetry("setting to height:" + height);
@@ -84,22 +97,36 @@ public class DejaVuArm {
             //setting the armMotor's target
             sendToTelemetry("starting motor");
             this.armMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            sendToTelemetry("turning off motor power");
             while (armMotor.isBusy()) {
                 if (level > currentLevel) {
                     armMotor.setVelocity(SLIDER_TPS);
                 }else{
                     armMotor.setVelocity(SLIDER_TPS_DOWN);
                 }
-                armMotor.setPower(0.8);
+                armMotor.setPower(1);
                 Log.d(TAG, "motor going to level (" + level + ") expected height ("
-                        + height + ") current height:" + armMotor.getTargetPosition());
+                        + height + ") current height:" + armMotor.getCurrentPosition());
+//                if(level ==0 && armMotor.getCurrentPosition() < 10) {
+//                    armMotor.setPower(0);
+//                    Log.d(TAG, "reached 0 position - turning off power");
+//                    try {
+//                        sleep(100);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
             }
-            sendToTelemetry("motor completed to level (" + level + ") current height:" + armMotor.getTargetPosition());
+            sendToTelemetry("motor completed to level (" + level + ") current height:" + armMotor.getCurrentPosition());
             Log.d(TAG, "motor completed to level (" + level + ") expected height ("
                     + height + ") current height:" + armMotor.getTargetPosition());
             //motor done/break
             sendToTelemetry("Applying Brakes!");
-            armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+//            if(level == 0){
+//                armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+//            } else {
+//                armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+//            }
             sendToTelemetry("turning off motor power");
 //            armMotor.setPower(0);
 
@@ -114,6 +141,9 @@ public class DejaVuArm {
 //                armMotor.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 //            }
             currentLevel = level;
+            if(level == 0){
+                resetDCMotor();
+            }
         } else {
             sendToTelemetry("already at level:" + level);
         }
