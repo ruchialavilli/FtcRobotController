@@ -22,11 +22,11 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
 
     // parking location 1
     // pc
-    protected static Vector2d location1 = new Vector2d(-14, 55);
+    protected static Vector2d location1 = new Vector2d(-12, 55);
     // gear
-    protected static Vector2d location2 = new Vector2d(-14, 32.25);
+    protected static Vector2d location2 = new Vector2d(-12, 32.25);
     // tool
-    protected static Vector2d location3 = new Vector2d(-14, 8);
+    protected static Vector2d location3 = new Vector2d(-12, 8);
 
     public void runOpMode() throws InterruptedException {
 
@@ -54,7 +54,7 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         drive.setPoseEstimate(startPose);
 
         Trajectory traj0 = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(8, 32))
+                .lineTo(new Vector2d(-4, 32))
                 .build();
 
         Trajectory traj1 = drive.trajectoryBuilder(traj0.end())
@@ -126,9 +126,11 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         robot.arm.moveArmToLevel(2);
         sleep(500);
         if (isStopRequested()) return;
+        drive.setMotorPowers(0.8, 0.8, 0.8, 0.8);
         drive.followTrajectory(traj0);
         if (isStopRequested()) return;
         drive.followTrajectory(traj1);
+        drive.setMotorPowers(1, 1, 1, 1);
         if (isStopRequested()) return;
         drive.turn(Math.toRadians(-48));
         robot.arm.moveArmToLevel(4);

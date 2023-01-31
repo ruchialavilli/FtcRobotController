@@ -35,14 +35,15 @@ public class DejaVuArm {
     public static double SLIDER_TPS_DOWN = 2500.0;
     static HashMap<Integer, Integer> level_map = new HashMap<>();
     private String TAG = "DejaVuArm";
+    int heightOffset = 75;
 
     {
         //100 = 1 inch
         level_map.put(0, 0 );//ground
         level_map.put(1, 400);//5 inches off the ground (pick up)
-        level_map.put(2, 1250);//16 inches - level 1
-        level_map.put(3, 2100);// to be 26 inches - level 2
-        level_map.put(4, 2925);//to be 36 inches - level 3
+        level_map.put(2, 1250+heightOffset);//16 inches - level 1
+        level_map.put(3, 2100+heightOffset);// to be 26 inches - level 2
+        level_map.put(4, 2925+heightOffset);//to be 36 inches - level 3
         level_map.put(6, 485);//1 inches off the ground (auton)
     }
 
