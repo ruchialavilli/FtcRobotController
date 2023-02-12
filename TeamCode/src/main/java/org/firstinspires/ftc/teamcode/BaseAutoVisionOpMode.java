@@ -114,7 +114,7 @@ public class BaseAutoVisionOpMode extends BaseAutoOpMode {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.4f;
         tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 330;
+        tfodParameters.inputSize = 360;
         tfodParameters.maxFrameRate = 60;
         tfodParameters.useObjectTracker = true;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);

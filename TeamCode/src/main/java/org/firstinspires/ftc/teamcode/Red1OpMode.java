@@ -51,7 +51,7 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
         drive.setPoseEstimate(startPose);
 
         Trajectory traj0 = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(-8, 32))
+                .lineTo(new Vector2d(6, 32))
                 .build();
 
         Trajectory traj1 = drive.trajectoryBuilder(traj0.end())
@@ -111,8 +111,10 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
         robot.arm.moveArmToLevel(2);
         sleep(500);
         if (isStopRequested()) return;
+        drive.setMotorPowers(0.8, 0.8, 0.8, 0.8);
         drive.followTrajectory(traj0);
         drive.followTrajectory(traj1);
+        drive.setMotorPowers(1, 1, 1, 1);
         drive.turn(Math.toRadians(41));
         if (isStopRequested()) return;
         robot.arm.moveArmToLevel(4);
