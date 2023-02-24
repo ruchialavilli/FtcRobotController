@@ -133,7 +133,7 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
             // to artificially zoom in to the center of image.  For best results, the "aspectRatio" argument
             // should be set to the value of the images used to create the TensorFlow Object Detection model
             // (typically 16/9).
-            tfod.setZoom(2.5 , 16.0/9.0);
+            tfod.setZoom(2.0 , 16.0/9.0);
         }
 
         /** Wait for the game to begin */
@@ -196,7 +196,7 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfodParameters.minResultConfidence = 0.40f;
         tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 360;
+        tfodParameters.inputSize = 360;//300
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
 
         // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
@@ -207,7 +207,7 @@ public class CustomTensorFlowObjectDetectionWebcam extends LinearOpMode {
 
     protected void findParking() {
         //TODO - is sleep needed ?
-        sleep(500);
+        sleep(0);
         int teddyCount = 0;
         int trafficCount = 0;
         int stopCount = 0;

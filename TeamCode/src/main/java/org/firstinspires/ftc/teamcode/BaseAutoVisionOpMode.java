@@ -53,6 +53,7 @@ import java.util.List;
 
 public class BaseAutoVisionOpMode extends BaseAutoOpMode {
     private String TAG = "BaseAutoVisionOpMode";
+    private boolean LIVE_GAME = true;
     // model trained on 1/11
     //protected static final String TFOD_MODEL_ASSET = "FinalModel.tflite";
     protected static final String TFOD_MODEL_ASSET  = "ssd_mobilenet_v1_1_metadata_1.tflite";
@@ -123,27 +124,28 @@ public class BaseAutoVisionOpMode extends BaseAutoOpMode {
 
     protected void findParking() {
         //TODO - is sleep needed ?
-        sleep(500);
+        sleep(0);
         int teddyCount = 0;
         int trafficCount = 0;
         int stopCount = 0;
+        //TODO: are 3 cycles needed ?
         for(int i = 0; i < 3; i++) {
             List<Recognition> updatedRecognitions = tfod.getRecognitions();//tfod.getUpdatedRecognitions();
             if (updatedRecognitions != null && updatedRecognitions.size() > 0) {
-                telemetry.addData("# Objects Detected", updatedRecognitions.size());
+                sendToTelemetry("# Objects Detected", updatedRecognitions.size());
                 // step through the list of recognitions and display image position/size information for each one
                 // Note: "Image number" refers to the randomized image orientation/number
                 for (Recognition recognition : updatedRecognitions) {
-                    double col = (recognition.getLeft() + recognition.getRight()) / 2;
-                    double row = (recognition.getTop() + recognition.getBottom()) / 2;
-                    double width = Math.abs(recognition.getRight() - recognition.getLeft());
-                    double height = Math.abs(recognition.getTop() - recognition.getBottom());
+//                    double col = (recognition.getLeft() + recognition.getRight()) / 2;
+//                    double row = (recognition.getTop() + recognition.getBottom()) / 2;
+//                    double width = Math.abs(recognition.getRight() - recognition.getLeft());
+//                    double height = Math.abs(recognition.getTop() - recognition.getBottom());
 
-                    Log.d(TAG, "////************* " + i + ":");
-                    Log.d(TAG, String.format("Image %s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100));
+//                    Log.d(TAG, "////************* " + i + ":");
+//                    Log.d(TAG, String.format("Image %s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100));
 //                Log.d(TAG, String.format("- Position (Row/Col): %.0f / %.0f", row, col));
 //                Log.d(TAG, String.format("- Size (Width/Height): %.0f / %.0f", width, height));
-                    Log.d(TAG, "*************////");
+//                    Log.d(TAG, "*************////");
                     if (recognition.getLabel().equals("teddy bear")) {
                         teddyCount++;
                     } else if (recognition.getLabel().equals("traffic light")) {
@@ -152,13 +154,10 @@ public class BaseAutoVisionOpMode extends BaseAutoOpMode {
                         stopCount++;
                     }
                 }
-                telemetry.addLine(String.format("Found Teddy(%d), Traffic(%d), Stop(%d)",teddyCount
+                sendToTelemetry("Vision Result", String.format("Found Teddy(%d), Traffic(%d), Stop(%d)",teddyCount
                         , trafficCount, stopCount));
-                Log.d(TAG, String.format("Found Teddy(%d), Traffic(%d), Stop(%d)", teddyCount
-                        , trafficCount, stopCount));
-                telemetry.update();
             } else {
-                Log.d(TAG, "No more recognitions found!");
+//                Log.d(TAG, "No more recognitions found!");
             }
         }
         // if anything other than pc is found use it - otherwise pc
@@ -171,6 +170,19 @@ public class BaseAutoVisionOpMode extends BaseAutoOpMode {
         } else {
             telemetry.addLine("found teddy bear location 3");
             parkingPosition = 3;
+        }
+    }
+
+    protected void sendToTelemetry(String key, int value){
+        if(!LIVE_GAME) {
+            sendToTelemetry(key, String.format("%d", value));
+        }
+    }
+    protected void sendToTelemetry(String key, String value){
+        if(!LIVE_GAME) {
+//            Log.d(TAG, key + " - " + value);
+            telemetry.addData(key, value);
+            telemetry.update();
         }
     }
 }
