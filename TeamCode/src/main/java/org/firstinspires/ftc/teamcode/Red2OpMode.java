@@ -1,32 +1,40 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.util.Base64;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-
 
 @Autonomous(name = "Red2OpMode", group = "AutoOpModes")
 public class Red2OpMode extends BaseAutoVisionOpMode {
     private String TAG = "Red2OpMode";
     private ElapsedTime runtime = new ElapsedTime();
+    String name = "Red2OpMode";
     private Thread parkingLocationFinderThread;
-    String name = "Red2Opmode";
+    public static String ACTION_GOTO_LEVEL = "goto_level";
+    public static String ACTION_PICKUP_CONE = "pickup";
+    public static String ACTION_RELEASE_CONE = "release";
+    private HandlerThread mHandlerThread;
+    private Handler armHandler;
 
-    // parking location 1
-    // pc
-    protected static Vector2d location1 = new Vector2d(-12, 55);
-    // gear
-    protected static Vector2d location2 = new Vector2d(-12, 32.25);
-    // tool
-    protected static Vector2d location3 = new Vector2d(-12, 8);
+    // parking locations
+    // stop sign
+    protected static Vector2d location1 = new Vector2d(-11, 58);
+    // traffic lights
+    protected static Vector2d location2 = new Vector2d(-11, 32.25);
+    // teddy bear
+    protected static Vector2d location3 = new Vector2d(-11, 8);
 
     public void runOpMode() throws InterruptedException {
 
@@ -40,28 +48,53 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
          **/
         if (tfod != null) {
             tfod.activate();
-            tfod.setZoom(2.5, 16.0/9.0);
+            tfod.setZoom(2.5, 16.0 / 9.0);
         }
 
-        //the auton file used for Red2 and Blue1
+        //the auton file to be used for Red1 and Blue2
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
 
         robot.arm = new DejaVuArm();
         robot.arm.init(hardwareMap, true);
+        // initialize handler thread to move robot arm
+        mHandlerThread = new HandlerThread("armThread");
+        mHandlerThread.start();
+        armHandler = new Handler(mHandlerThread.getLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+//                Log.d(TAG, "executing arm action: " + action);
+                switch (msg.what){
+                    case 999:
+//                        Log.d(TAG, "executing arm action: Open");
+                        robot.arm.openPos();
+//                        Log.d(TAG, "executing arm action: Open Done");
+                        break;
+                    case 888:
+//                        Log.d(TAG, "executing arm action: Close");
+                        robot.arm.closePos();
+//                        Log.d(TAG, "executing arm action: Close Done");
+                        break;
+                    default:
+//                        Log.d(TAG, "executing arm action going to level: " + msg.what);
+                        robot.arm.moveArmToLevelAuton(msg.what);
+//                        Log.d(TAG, "executing arm action: going to level Done");
+                        break;
+                }
 
-//an inch too close to 0
-        Pose2d startPose = new Pose2d(-63.375, 32, Math.toRadians(0));//todo: measure on competition field
+            }
+        };
+
+
+        Pose2d startPose = new Pose2d(-63.375, 32, Math.toRadians(0));
         drive.setPoseEstimate(startPose);
 
         Trajectory traj0 = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(-4, 32))
-                .build();
-
-        Trajectory traj1 = drive.trajectoryBuilder(traj0.end())
                 .lineTo(new Vector2d(-12, 32))
                 .build();
 
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(-48))))
+        Trajectory traj2 = drive.trajectoryBuilder(traj0.end().plus(new Pose2d(0, 0, Math.toRadians(-47))))
                 .forward(12)
                 .build();
 
@@ -69,17 +102,17 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
                 .back(12)
                 .build();
 
-        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(138))))
-                .lineTo(new Vector2d(-12, 60))
+        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(137))))
+                .strafeTo(new Vector2d(-12, 60))
                 .build();
 
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
                 .lineTo(new Vector2d(-12, 32))
                 .build();
 
-        //looping code trajectories...
+        //looping code here
 
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(-138))))
+        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(-137))))
                 .forward(12)
                 .build();
 
@@ -87,114 +120,111 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
                 .back(12)
                 .build();
 
-
-//        Trajectory traj8 = drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(135))))
-//                .lineTo(new Vector2d(-14, 59))
-//                .build();
-
-
-
-
-        //end of loop
-
-        robot.arm.closePos();
-        telemetry.addData(name, " Robot ready for run");
-        telemetry.update();
+        sendMessage(ACTION_PICKUP_CONE);
+        sendToTelemetry(name, " Robot ready for run");
 
         waitForStart();
         runtime.reset();
 
-        Log.d(TAG, "starting thread 1");
+//        Log.d(TAG, "starting thread 1");
         parkingLocationFinderThread = new Thread(parkingLocationFinderRunnable);
         parkingLocationFinderThread.start();
 
         // now wait for the threads to finish before returning from this method
-        Log.d(TAG, "waiting for threads to finish...");
+//        Log.d(TAG, "waiting for threads to finish...");
         parkingLocationFinderThread.join();
-        Log.d(TAG, "thread joins complete");
-
-
+//        Log.d(TAG, "thread joins complete");
         // always deactivate
         if (tfod != null) {
             tfod.deactivate();
         }
 
-        if (isStopRequested()) return;
+        if (isStopRequested()) {
+            //armHandler.
+            mHandlerThread.quitSafely();
+            return;
+        }
 
-        robot.arm.openPos();
-        sleep(500);
-        robot.arm.moveArmToLevel(2);
-        sleep(500);
-        if (isStopRequested()) return;
-        drive.setMotorPowers(0.8, 0.8, 0.8, 0.8);
+        sendMessage(ACTION_GOTO_LEVEL, 4);
         drive.followTrajectory(traj0);
-        if (isStopRequested()) return;
-        drive.followTrajectory(traj1);
-        drive.setMotorPowers(1, 1, 1, 1);
-        if (isStopRequested()) return;
-        drive.turn(Math.toRadians(-48));
-        robot.arm.moveArmToLevel(4);
-        telemetry.addData("Trajectory", " moved to level 4");
-        telemetry.update();
-        if (isStopRequested()) return;
-        sleep(500);
-        drive.followTrajectory(traj2);
-        robot.arm.closePos();
-        sleep(500);
-        telemetry.addData("Trajectory", " release cone");
-        telemetry.update();
-        if (isStopRequested()) return;
-        drive.followTrajectory(traj3);
-        robot.arm.moveArmToLevel(2);
-        telemetry.addData("Trajectory", " moved to level 2");
-        telemetry.update();
-        if (isStopRequested()) return;
-        sleep(500);
-        drive.turn(Math.toRadians(138));
-        drive.followTrajectory(traj4);
-        robot.arm.moveArmToLevel(6);
-        if (isStopRequested()) return;
-        sleep(500);
-        robot.arm.openPos();
-        telemetry.addData("Trajectory", " moved to level 2.5 and pick up cone");
-        telemetry.update();
-        sleep(500);
-        robot.arm.moveArmToLevel(2);
-        telemetry.addData("Trajectory", " moved to level 2");
-        telemetry.update();
-        drive.followTrajectory(traj5);
-        if (isStopRequested()) return;
-        //loop from here if necessary
-        drive.turn(Math.toRadians(-138));
-        robot.arm.moveArmToLevel(4);
-        telemetry.addData("Trajectory", " moved to level 4");
-        telemetry.update();
-        if (isStopRequested()) return;
-        sleep(500);
-        drive.followTrajectory(traj6);
-        robot.arm.closePos();
-        sleep(500);
-        telemetry.addData("Trajectory", " release cone");
-        telemetry.update();
-        if (isStopRequested()) return;
-        drive.followTrajectory(traj7);
-        robot.arm.moveArmToLevel(2);
-        telemetry.addData("Trajectory", " moved to level 2");
-        telemetry.update();
-        sleep(500);
+        drive.turn(Math.toRadians(-47));
+        sendToTelemetry("Trajectory", " moved to level 4");
 
-        drive.turn(Math.toRadians(-42));
-        telemetry.addData("Trajectory", " moved to level 2");
-        telemetry.update();
-        if (isStopRequested()) return;
+        drive.followTrajectory(traj2);
+        sendMessage(ACTION_RELEASE_CONE);
+        sendToTelemetry("Trajectory", " release cone");
+        drive.followTrajectory(traj3);
+
+        //loop from here
+        sendMessage(ACTION_GOTO_LEVEL, 5);
+        sendToTelemetry("Trajectory", " moved to level 2");
+
+        drive.turn(Math.toRadians(137));
+        drive.followTrajectory(traj4);
+        sendMessage(ACTION_GOTO_LEVEL, 6);
+        sleep(250);
+        sendMessage(ACTION_PICKUP_CONE);
+        sendToTelemetry("Trajectory", " moved to level 0 and pick up cone");
+
+        sleep(350);
+        sendMessage(ACTION_GOTO_LEVEL, 4);
+        sendToTelemetry("Trajectory", " moved to level 4");
+
+        drive.followTrajectory(traj5);
+        drive.turn(Math.toRadians(-137));
+        drive.followTrajectory(traj6);
+        sendMessage(ACTION_RELEASE_CONE);
+        sendToTelemetry("Trajectory", " release cone");
+
+        drive.followTrajectory(traj7);
+        sendMessage(ACTION_GOTO_LEVEL, 8);
+        sendToTelemetry("Trajectory", " moved to level 2");
+
+        drive.turn(Math.toRadians(137));
+        drive.followTrajectory(traj4);
+        sendMessage(ACTION_GOTO_LEVEL, 7);
+        sleep(250);
+        sendMessage(ACTION_PICKUP_CONE);
+        sendToTelemetry("Trajectory", " moved to level 0 and pick up cone");
+
+        sleep(350);
+        sendMessage(ACTION_GOTO_LEVEL, 4);
+        sendToTelemetry("Trajectory", " moved to level 4");
+
+        drive.followTrajectory(traj5);
+        drive.turn(Math.toRadians(-137));
+        drive.followTrajectory(traj6);
+        sendMessage(ACTION_RELEASE_CONE);
+        sendToTelemetry("Trajectory", " release cone");
+        drive.followTrajectory(traj7);
+
+
+
+        //to end
+        //drive.turn(Math.toRadians(52));
         //going to found location
-        telemetry.addData("Going to parking location:", locationToPark.toString());
-            telemetry.update();
-            drive.followTrajectory(
-                    drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(-42))))
-                    .lineTo(BaseAutoVisionOpMode.locationToPark)
-                    .build());
-        robot.arm.moveArmToLevel(0);
+        sendToTelemetry("Going to parking location:", locationToPark.toString());
+
+        drive.followTrajectory(
+                drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(-42.5))))
+                        .lineTo(BaseAutoVisionOpMode.locationToPark)
+                        .build());
+
+        //quitting thread
+        mHandlerThread.quitSafely();
+    }
+
+    private void sendMessage(String action) {
+        sendMessage(action, -1);
+    }
+    private void sendMessage(String action, int level) {
+        if(ACTION_RELEASE_CONE.equals(action)){
+            armHandler.sendEmptyMessage(888);
+        } else if(ACTION_PICKUP_CONE.equals(action)){
+            armHandler.sendEmptyMessage(999);
+        } else {
+            armHandler.sendEmptyMessage(level);
+        }
 
     }
 
@@ -202,10 +232,10 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         //driveForwardByInches(4, robot, DejaVuBot.TPS);
         //Find the level in 10 attempts. If not detected set level to 3.
         if (opModeIsActive() && tfod != null) {
-            telemetry.addData(">", "Detecting parking location using vision");
-            telemetry.update();
+            sendToTelemetry(">", "Detecting parking location using vision");
+
             findParking();
-            switch(parkingPosition){
+            switch (parkingPosition) {
                 case 1:
                     locationToPark = location1;
                     break;
@@ -219,29 +249,26 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
                     locationToPark = location2;
                     break;
             }
-            telemetry.addData("Found parking", locationToPark);
-            if(locationToPark != null){
-                Log.i(TAG, " Found parking ="+ locationToPark);
+            sendToTelemetry("Found parking", locationToPark.toString());
+            if (locationToPark != null) {
+                Log.i(TAG, " Found parking =" + locationToPark);
             }
-            if(locationToPark == location1) {
+            if (locationToPark == location1) {
                 telemetry.addLine(" location1");
-            } else if(locationToPark == location2) {
+            } else if (locationToPark == location2) {
                 telemetry.addLine(" location2");
-            } else if(locationToPark == location3) {
+            } else if (locationToPark == location3) {
                 telemetry.addLine(" location3");
             } else {
                 telemetry.addLine(" UNKNOWN - defaulting to location2");
                 locationToPark = location2;
             }
-            telemetry.update();
-        } else{
-            telemetry.addData(">", "Could not init vision code - defaulting to TOP");
-            telemetry.update();
+        } else {
+            sendToTelemetry(">", "Could not init vision code - defaulting to TOP");
             locationToPark = location2;
         }
-        Log.d(TAG, "Thread 1 finishing up");
+//        Log.d(TAG, "Thread 1 finishing up");
     };
 
+
 }
-
-

@@ -12,35 +12,29 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-
-import java.util.logging.LogRecord;
 
 @Autonomous(name = "test", group = "AutoOpModes")
 public class test extends BaseAutoVisionOpMode {
     private String TAG = "test";
     private ElapsedTime runtime = new ElapsedTime();
-    String name = "Red1OpMode";
+    String name = "Blue1OpMode";
     private Thread parkingLocationFinderThread;
-    public static String ACTION = "arm_action";
     public static String ACTION_GOTO_LEVEL = "goto_level";
     public static String ACTION_PICKUP_CONE = "pickup";
     public static String ACTION_RELEASE_CONE = "release";
-    public static String GOTO_LEVEL = "level";
     private HandlerThread mHandlerThread;
     private Handler armHandler;
-    private Object lockOnMe = new Object();
-    // parking location 1
-    // pc
-    //check if levels are right + increase speed
-    protected static Vector2d location1 = new Vector2d(10, 8);
-    // gear
-    protected static Vector2d location2 = new Vector2d(10, 32.25);
-    // tool
-    protected static Vector2d location3 = new Vector2d(10, 55);
+
+    // parking locations
+    // stop sign
+    protected static Vector2d location1 = new Vector2d(-11, 58);
+    // traffic lights
+    protected static Vector2d location2 = new Vector2d(-11, 32.25);
+    // teddy bear
+    protected static Vector2d location3 = new Vector2d(-11, 8);
 
     public void runOpMode() throws InterruptedException {
 
@@ -70,8 +64,6 @@ public class test extends BaseAutoVisionOpMode {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
-//                Bundle data = msg.getData();
-//                String action = data.getString(ACTION);
 //                Log.d(TAG, "executing arm action: " + action);
                 switch (msg.what){
                     case 999:
@@ -91,32 +83,18 @@ public class test extends BaseAutoVisionOpMode {
                         break;
                 }
 
-//                if (ACTION_PICKUP_CONE.equals(action)) {
-//                    robot.arm.openPos();
-//                } else if (ACTION_RELEASE_CONE.equals(action)) {
-//                    robot.arm.closePos();
-//                } else {
-//                    int level = data.getInt(GOTO_LEVEL);
-//                    Log.d(TAG, "executing arm action: " + action + " level: " + level);
-//                    robot.arm.moveArmToLevelAuton(level);
-//                }
-                //Log.d(TAG, "done executing arm action: " + action);
             }
         };
 
 
-        Pose2d startPose = new Pose2d(63.375, 32, Math.toRadians(180));
+        Pose2d startPose = new Pose2d(-63.375, 32, Math.toRadians(0));
         drive.setPoseEstimate(startPose);
 
         Trajectory traj0 = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(10, 32))
+                .lineTo(new Vector2d(-12, 32))
                 .build();
 
-//        Trajectory traj1 = drive.trajectoryBuilder(traj0.end())
-//                .lineTo(new Vector2d(9, 32))
-//                .build();
-
-        Trajectory traj2 = drive.trajectoryBuilder(traj0.end().plus(new Pose2d(0, 0, Math.toRadians(41))))
+        Trajectory traj2 = drive.trajectoryBuilder(traj0.end().plus(new Pose2d(0, 0, Math.toRadians(-47))))
                 .forward(12)
                 .build();
 
@@ -124,17 +102,17 @@ public class test extends BaseAutoVisionOpMode {
                 .back(12)
                 .build();
 
-        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(-131))))
-                .strafeTo(new Vector2d(10, 60))
+        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(137))))
+                .strafeTo(new Vector2d(-12, 60))
                 .build();
 
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                .lineTo(new Vector2d(10, 32))
+                .lineTo(new Vector2d(-12, 32))
                 .build();
 
         //looping code here
 
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(128))))
+        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(-137))))
                 .forward(12)
                 .build();
 
@@ -143,7 +121,6 @@ public class test extends BaseAutoVisionOpMode {
                 .build();
 
         sendMessage(ACTION_PICKUP_CONE);
-        //robot.arm.openPos();
         sendToTelemetry(name, " Robot ready for run");
 
         waitForStart();
@@ -163,78 +140,63 @@ public class test extends BaseAutoVisionOpMode {
         }
 
         if (isStopRequested()) {
+            //armHandler.
             mHandlerThread.quitSafely();
             return;
         }
-//pickup is only 0, 6 7, and release is all high levels 2 3 4 - boolean to pick up
+
         sendMessage(ACTION_GOTO_LEVEL, 4);
-        //robot.arm.moveArmToLevelAuton(4);
         drive.followTrajectory(traj0);
-        drive.turn(Math.toRadians(41));
+        drive.turn(Math.toRadians(-47));
         sendToTelemetry("Trajectory", " moved to level 4");
+
         drive.followTrajectory(traj2);
         sendMessage(ACTION_RELEASE_CONE);
-        //robot.arm.closePos();
         sendToTelemetry("Trajectory", " release cone");
         drive.followTrajectory(traj3);
-//        if (isStopRequested()) return;
-//loop from here
-        sendMessage(ACTION_GOTO_LEVEL, 5);
-        //robot.arm.moveArmToLevelAuton(2);
-        sendToTelemetry("Trajectory", " moved to level 2");
-        drive.turn(Math.toRadians(-131));
-        drive.followTrajectory(traj4);
-//        if (isStopRequested()) return;
-        sendMessage(ACTION_GOTO_LEVEL, 6);
-        //robot.arm.moveArmToLevelAuton(6);
-        sleep(250);
-        sendMessage(ACTION_PICKUP_CONE);
-        //robot.arm.openPos();
-        sendToTelemetry("Trajectory", " moved to level 0 and pick up cone");
-//        if (isStopRequested()) return;
-        sleep(350);
-        sendMessage(ACTION_GOTO_LEVEL, 4);
-        //robot.arm.moveArmToLevelAuton(4);
-        sendToTelemetry("Trajectory", " moved to level 4");
-        drive.followTrajectory(traj5);
-//        if (isStopRequested()) return;
-        drive.turn(Math.toRadians(128));
-        drive.followTrajectory(traj6);
-        sendMessage(ACTION_RELEASE_CONE);
-        //robot.arm.closePos();
-        sendToTelemetry("Trajectory", " release cone");
-        drive.followTrajectory(traj7);
 
-        sendMessage(ACTION_GOTO_LEVEL, 8);
-        //robot.arm.moveArmToLevelAuton(2);
+        //loop from here
+        sendMessage(ACTION_GOTO_LEVEL, 5);
         sendToTelemetry("Trajectory", " moved to level 2");
-        
-        drive.turn(Math.toRadians(-131));
+
+        drive.turn(Math.toRadians(137));
         drive.followTrajectory(traj4);
-//        if (isStopRequested()) return;
-        sendMessage(ACTION_GOTO_LEVEL, 7);
-        //robot.arm.moveArmToLevelAuton(7);
+        sendMessage(ACTION_GOTO_LEVEL, 6);
         sleep(250);
         sendMessage(ACTION_PICKUP_CONE);
-        //robot.arm.openPos();
         sendToTelemetry("Trajectory", " moved to level 0 and pick up cone");
-        
-//        if (isStopRequested()) return;
+
         sleep(350);
         sendMessage(ACTION_GOTO_LEVEL, 4);
-        //robot.arm.moveArmToLevelAuton(4);
+        sendToTelemetry("Trajectory", " moved to level 4");
+
+        drive.followTrajectory(traj5);
+        drive.turn(Math.toRadians(-137));
+        drive.followTrajectory(traj6);
+        sendMessage(ACTION_RELEASE_CONE);
+        sendToTelemetry("Trajectory", " release cone");
+
+        drive.followTrajectory(traj7);
+        sendMessage(ACTION_GOTO_LEVEL, 8);
+        sendToTelemetry("Trajectory", " moved to level 2");
+        
+        drive.turn(Math.toRadians(137));
+        drive.followTrajectory(traj4);
+        sendMessage(ACTION_GOTO_LEVEL, 7);
+        sleep(250);
+        sendMessage(ACTION_PICKUP_CONE);
+        sendToTelemetry("Trajectory", " moved to level 0 and pick up cone");
+        
+        sleep(350);
+        sendMessage(ACTION_GOTO_LEVEL, 4);
         sendToTelemetry("Trajectory", " moved to level 4");
         
         drive.followTrajectory(traj5);
-//        if (isStopRequested()) return;
-        drive.turn(Math.toRadians(128));
+        drive.turn(Math.toRadians(-137));
         drive.followTrajectory(traj6);
         sendMessage(ACTION_RELEASE_CONE);
-        //robot.arm.closePos();
         sendToTelemetry("Trajectory", " release cone");
-        
         drive.followTrajectory(traj7);
-        //sendMessage(ACTION_GOTO_LEVEL, 0);
 
 
 
@@ -244,14 +206,12 @@ public class test extends BaseAutoVisionOpMode {
         sendToTelemetry("Going to parking location:", locationToPark.toString());
         
         drive.followTrajectory(
-                drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(53))))
+                drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(-42.5))))
                         .lineTo(BaseAutoVisionOpMode.locationToPark)
                         .build());
-        //robot.arm.moveArmToLevelAuton(0);
-        //.plus(new Pose2d(0, 0, Math.toRadians(53)))
 
-        // stop the arm thread
-        //mHandlerThread.quitSafely();
+        //quitting thread
+        mHandlerThread.quitSafely();
     }
 
     private void sendMessage(String action) {
@@ -265,19 +225,6 @@ public class test extends BaseAutoVisionOpMode {
         } else {
             armHandler.sendEmptyMessage(level);
         }
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Message msg = armHandler.obtainMessage();
-//                Bundle bundle = new Bundle();
-//                bundle.putString(ACTION, action);
-//                if(action.equals(ACTION_GOTO_LEVEL)) {
-//                    bundle.putInt(GOTO_LEVEL, level);
-//                }
-//                msg.setData(bundle);
-//                armHandler.sendMessage(msg);
-//            }
-//        }).start();
 
     }
 

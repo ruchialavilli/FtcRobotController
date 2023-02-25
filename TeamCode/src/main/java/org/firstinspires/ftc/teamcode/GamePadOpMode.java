@@ -115,7 +115,7 @@ public class GamePadOpMode extends LinearOpMode {
                 if (gamepad2.y) {
                     telemetry.addData("GP2 Input", "Y");
                     telemetry.addData("GP2 Input level", "4 - Level 3");
-                    robot.arm.moveArmToLevel(4);
+                    robot.arm.moveArmToLevel(9);
                 } else if (gamepad2.x) {
                     telemetry.addData("GP2 Input", "X");
                     telemetry.addData("GP2 Input level", "3 - Level 2");
