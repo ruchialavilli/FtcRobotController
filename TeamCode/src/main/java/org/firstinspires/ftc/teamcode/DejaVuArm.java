@@ -51,6 +51,9 @@ public class DejaVuArm {
         level_map.put(6, 457);//first cone on stack (auton)
         level_map.put(7, 350);//second cone on stack (auton)
         level_map.put(8, 600);//getting second cone on stack (auton)
+
+        level_map.put(10, 25 );//1 inch off ground
+
     }
 
     private int currentLevel = 0;

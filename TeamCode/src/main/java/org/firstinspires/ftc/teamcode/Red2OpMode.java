@@ -121,7 +121,8 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
                 .build();
 
         sendMessage(ACTION_PICKUP_CONE);
-        sendToTelemetry(name, " Robot ready for run");
+        telemetry.addData(name, " Robot ready for run");
+        telemetry.update();
 
         waitForStart();
         runtime.reset();
@@ -140,8 +141,8 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         }
 
         if (isStopRequested()) {
-            //armHandler.
-            mHandlerThread.quitSafely();
+            // quit() so we do not process any more messages
+            mHandlerThread.quit();
             return;
         }
 
@@ -211,7 +212,7 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
                         .build());
 
         //quitting thread
-        mHandlerThread.quitSafely();
+        mHandlerThread.quit();
     }
 
     private void sendMessage(String action) {
@@ -229,7 +230,6 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
     }
 
     private Runnable parkingLocationFinderRunnable = () -> {
-        //driveForwardByInches(4, robot, DejaVuBot.TPS);
         //Find the level in 10 attempts. If not detected set level to 3.
         if (opModeIsActive() && tfod != null) {
             sendToTelemetry(">", "Detecting parking location using vision");
