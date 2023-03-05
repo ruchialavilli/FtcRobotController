@@ -29,11 +29,11 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
     private Handler armHandler;
     // parking locations
     // stop sign
-    protected static Vector2d location1 = new Vector2d(12, 8);
+    protected static Vector2d location1 = new Vector2d(10, 8);
     // traffic lights
-    protected static Vector2d location2 = new Vector2d(12, 32.25);
+    protected static Vector2d location2 = new Vector2d(10, 32.25);
     // teddy bear
-    protected static Vector2d location3 = new Vector2d(12, 56);
+    protected static Vector2d location3 = new Vector2d(10, 56);
 
     public void runOpMode() throws InterruptedException {
 
@@ -85,16 +85,15 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
             }
         };
 
-
         Pose2d startPose = new Pose2d(63.375, 32, Math.toRadians(180));
         drive.setPoseEstimate(startPose);
 
-//        Trajectory traj0 = drive.trajectoryBuilder(startPose)
-//                .lineTo(new Vector2d(9.5, 32))
-//                .build();
+        Trajectory traj0 = drive.trajectoryBuilder(startPose)
+                .lineTo(new Vector2d(6, 32))
+                .build();
 
-        Trajectory traj1 = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(12, 32))
+        Trajectory traj1 = drive.trajectoryBuilder(traj0.end())
+                .lineTo(new Vector2d(10, 32))
                 .build();//9.25
 
         Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(43))))
@@ -106,11 +105,11 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
                 .build();
 
         Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(-133))))
-                .strafeTo(new Vector2d(12, 60))
+                .strafeTo(new Vector2d(10, 60))
                 .build();
 
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                .lineTo(new Vector2d(12, 32))
+                .lineTo(new Vector2d(10, 32))
                 .build();
 
         //looping code here
@@ -149,9 +148,9 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
             return;
         }
 
-
+//      ***** 1st Cone *****
         sendMessage(ACTION_GOTO_LEVEL, 4);
-        //drive.followTrajectory(traj0);
+        drive.followTrajectory(traj0);
         drive.followTrajectory(traj1);
         drive.turn(Math.toRadians(43));
         sendToTelemetry("Trajectory", " moved to level 4");
@@ -162,6 +161,7 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
         drive.followTrajectory(traj3);
 
         //loop from here
+//      ***** 2nd Cone *****
         sendMessage(ACTION_GOTO_LEVEL, 5);
         sendToTelemetry("Trajectory", " moved to level 2");
 
@@ -181,28 +181,28 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
         drive.followTrajectory(traj6);
         sendMessage(ACTION_RELEASE_CONE);
         sendToTelemetry("Trajectory", " release cone");
-
         drive.followTrajectory(traj7);
-        sendMessage(ACTION_GOTO_LEVEL, 8);
-        sendToTelemetry("Trajectory", " moved to level 2");
-
-        drive.turn(Math.toRadians(-133));
-        drive.followTrajectory(traj4);
-        sendMessage(ACTION_GOTO_LEVEL, 7);
-        sleep(250);
-        sendMessage(ACTION_PICKUP_CONE);
-        sendToTelemetry("Trajectory", " moved to level 0 and pick up cone");
-
-        sleep(400);
-        sendMessage(ACTION_GOTO_LEVEL, 4);
-        sendToTelemetry("Trajectory", " moved to level 4");
-
-        drive.followTrajectory(traj5);
-        drive.turn(Math.toRadians(133));
-        drive.followTrajectory(traj6);
-        sendMessage(ACTION_RELEASE_CONE);
-        sendToTelemetry("Trajectory", " release cone");
-        drive.followTrajectory(traj7);
+//       ******  3rd Cone *****
+//        sendMessage(ACTION_GOTO_LEVEL, 8);
+//        sendToTelemetry("Trajectory", " moved to level 2");
+//
+//        drive.turn(Math.toRadians(-133));
+//        drive.followTrajectory(traj4);
+//        sendMessage(ACTION_GOTO_LEVEL, 7);
+//        sleep(250);
+//        sendMessage(ACTION_PICKUP_CONE);
+//        sendToTelemetry("Trajectory", " moved to level 0 and pick up cone");
+//
+//        sleep(400);
+//        sendMessage(ACTION_GOTO_LEVEL, 4);
+//        sendToTelemetry("Trajectory", " moved to level 4");
+//
+//        drive.followTrajectory(traj5);
+//        drive.turn(Math.toRadians(133));
+//        drive.followTrajectory(traj6);
+//        sendMessage(ACTION_RELEASE_CONE);
+//        sendToTelemetry("Trajectory", " release cone");
+//        drive.followTrajectory(traj7);
 
 
 
