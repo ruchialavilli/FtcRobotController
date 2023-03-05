@@ -86,41 +86,53 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
         };
 
 
-        Pose2d startPose = new Pose2d(63.375, 32, Math.toRadians(180));
+        Pose2d startPose = new Pose2d(65.25, 36, Math.toRadians(180));
         drive.setPoseEstimate(startPose);
 
-//        Trajectory traj0 = drive.trajectoryBuilder(startPose)
-//                .lineTo(new Vector2d(9.5, 32))
-//                .build();
-
+// push cone
         Trajectory traj1 = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(12, 32))
-                .build();//9.25
-
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(43))))
-                .forward(10.5)
+                .lineTo(new Vector2d(9, 36))
                 .build();
-
+// drop cone
+        Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(53.13))))
+                .lineTo(new Vector2d(3.75, 29))
+                .build();
+// goto center
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                .back(10.5)
+                .lineTo(new Vector2d(12, 36))
                 .build();
-
-        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(-133))))
-                .strafeTo(new Vector2d(12, 60))
+// pick cone
+        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(-143.13))))
+                .strafeTo(new Vector2d(12, 62))
                 .build();
-
+// goto center
         Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                .lineTo(new Vector2d(12, 32))
+                .lineTo(new Vector2d(12, 36))
                 .build();
 
-        //looping code here
-
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(133))))
-                .forward(11.5)
+// drop cone
+        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(135))))
+                .lineTo(new Vector2d(6.78, 29.28))
                 .build();
-
+// goto center
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
-                .back(11.5)
+                .lineTo(new Vector2d(12, 36))
+                .build();
+// pick cone
+        Trajectory traj8 = drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(-135))))
+                .strafeTo(new Vector2d(12, 62))
+                .build();
+// goto center
+        Trajectory traj9 = drive.trajectoryBuilder(traj8.end())
+                .lineTo(new Vector2d(12, 36))
+                .build();
+// drop cone
+        Trajectory traj10 = drive.trajectoryBuilder(traj9.end().plus(new Pose2d(0, 0, Math.toRadians(135))))
+                .lineTo(new Vector2d(6.78, 29.28))
+                .build();
+// goto center
+        Trajectory traj11 = drive.trajectoryBuilder(traj10.end())
+                .lineTo(new Vector2d(12, 36))
                 .build();
 
         sendMessage(ACTION_PICKUP_CONE);
@@ -153,68 +165,72 @@ public class Red1OpMode extends BaseAutoVisionOpMode {
         sendMessage(ACTION_GOTO_LEVEL, 4);
         //drive.followTrajectory(traj0);
         drive.followTrajectory(traj1);
-        drive.turn(Math.toRadians(43));
+
+        drive.turn(Math.toRadians(53.13));
         sendToTelemetry("Trajectory", " moved to level 4");
 
         drive.followTrajectory(traj2);
         sendMessage(ACTION_RELEASE_CONE);
         sendToTelemetry("Trajectory", " release cone");
-        drive.followTrajectory(traj3);
 
-        //loop from here
-        sendMessage(ACTION_GOTO_LEVEL, 5);
-        sendToTelemetry("Trajectory", " moved to level 2");
-
-        drive.turn(Math.toRadians(-133));
-        drive.followTrajectory(traj4);
-        sendMessage(ACTION_GOTO_LEVEL, 6);
-        sleep(250);
-        sendMessage(ACTION_PICKUP_CONE);
-        sendToTelemetry("Trajectory", " moved to level 0 and pick up cone");
-
-        sleep(400);
-        sendMessage(ACTION_GOTO_LEVEL, 4);
-        sendToTelemetry("Trajectory", " moved to level 4");
-
-        drive.followTrajectory(traj5);
-        drive.turn(Math.toRadians(133));
-        drive.followTrajectory(traj6);
-        sendMessage(ACTION_RELEASE_CONE);
-        sendToTelemetry("Trajectory", " release cone");
-
-        drive.followTrajectory(traj7);
-        sendMessage(ACTION_GOTO_LEVEL, 8);
-        sendToTelemetry("Trajectory", " moved to level 2");
-
-        drive.turn(Math.toRadians(-133));
-        drive.followTrajectory(traj4);
-        sendMessage(ACTION_GOTO_LEVEL, 7);
-        sleep(250);
-        sendMessage(ACTION_PICKUP_CONE);
-        sendToTelemetry("Trajectory", " moved to level 0 and pick up cone");
-
-        sleep(400);
-        sendMessage(ACTION_GOTO_LEVEL, 4);
-        sendToTelemetry("Trajectory", " moved to level 4");
-
-        drive.followTrajectory(traj5);
-        drive.turn(Math.toRadians(133));
-        drive.followTrajectory(traj6);
-        sendMessage(ACTION_RELEASE_CONE);
-        sendToTelemetry("Trajectory", " release cone");
-        drive.followTrajectory(traj7);
-
-
-
-        //to end
-        //drive.turn(Math.toRadians(52));
-        //going to found location
-        sendToTelemetry("Going to parking location:", locationToPark.toString());
-
-        drive.followTrajectory(
-                drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(43))))
-                        .lineTo(BaseAutoVisionOpMode.locationToPark)
-                        .build());
+//        drive.followTrajectory(traj3);
+//
+//
+//
+//        //loop from here
+//        sendMessage(ACTION_GOTO_LEVEL, 5);
+//        sendToTelemetry("Trajectory", " moved to level 2");
+//
+//        drive.turn(Math.toRadians(-143.13));
+//        drive.followTrajectory(traj4);
+//        sendMessage(ACTION_GOTO_LEVEL, 6);
+//        sleep(250);
+//        sendMessage(ACTION_PICKUP_CONE);
+//        sendToTelemetry("Trajectory", " moved to level 0 and pick up cone");
+//
+//        sleep(400);
+//        sendMessage(ACTION_GOTO_LEVEL, 4);
+//        sendToTelemetry("Trajectory", " moved to level 4");
+//
+//        drive.followTrajectory(traj5);
+//        drive.turn(Math.toRadians(135));
+//        drive.followTrajectory(traj6);
+//        sendMessage(ACTION_RELEASE_CONE);
+//        sendToTelemetry("Trajectory", " release cone");
+//
+//        drive.followTrajectory(traj7);
+//        sendMessage(ACTION_GOTO_LEVEL, 8);
+//        sendToTelemetry("Trajectory", " moved to level 2");
+//
+//        drive.turn(Math.toRadians(-135));
+//        drive.followTrajectory(traj8);
+//        sendMessage(ACTION_GOTO_LEVEL, 7);
+//        sleep(250);
+//        sendMessage(ACTION_PICKUP_CONE);
+//        sendToTelemetry("Trajectory", " moved to level 0 and pick up cone");
+//
+//        sleep(400);
+//        sendMessage(ACTION_GOTO_LEVEL, 4);
+//        sendToTelemetry("Trajectory", " moved to level 4");
+//
+//        drive.followTrajectory(traj9);
+//        drive.turn(Math.toRadians(135));
+//        drive.followTrajectory(traj10);
+//        sendMessage(ACTION_RELEASE_CONE);
+//        sendToTelemetry("Trajectory", " release cone");
+//        drive.followTrajectory(traj11);
+//
+//
+//
+//        //to end
+//        //drive.turn(Math.toRadians(52));
+//        //going to found location
+//        sendToTelemetry("Going to parking location:", locationToPark.toString());
+//
+//        drive.followTrajectory(
+//                drive.trajectoryBuilder(traj11.end().plus(new Pose2d(0, 0, Math.toRadians(45))))
+//                        .lineTo(BaseAutoVisionOpMode.locationToPark)
+//                        .build());
 
         //quitting thread
         mHandlerThread.quit();

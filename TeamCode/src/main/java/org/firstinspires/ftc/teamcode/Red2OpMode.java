@@ -30,11 +30,11 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
 
     // parking locations
     // stop sign
-    protected static Vector2d location1 = new Vector2d(-11, 58);
+    protected static Vector2d location1 = new Vector2d(-12, 58);
     // traffic lights
-    protected static Vector2d location2 = new Vector2d(-11, 32.25);
+    protected static Vector2d location2 = new Vector2d(-12, 32.25);
     // teddy bear
-    protected static Vector2d location3 = new Vector2d(-11, 8);
+    protected static Vector2d location3 = new Vector2d(-12, 8);
 
     public void runOpMode() throws InterruptedException {
 
@@ -94,15 +94,15 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
                 .lineTo(new Vector2d(-12, 32))
                 .build();
 
-        Trajectory traj2 = drive.trajectoryBuilder(traj0.end().plus(new Pose2d(0, 0, Math.toRadians(-47))))
-                .forward(12)
+        Trajectory traj2 = drive.trajectoryBuilder(traj0.end().plus(new Pose2d(0, 0, Math.toRadians(-43))))
+                .forward(10.5)
                 .build();
 
         Trajectory traj3 = drive.trajectoryBuilder(traj2.end())
-                .back(12)
+                .back(10.5)
                 .build();
 
-        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(137))))
+        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(133))))
                 .strafeTo(new Vector2d(-12, 60))
                 .build();
 
@@ -112,12 +112,12 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
 
         //looping code here
 
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(-137))))
-                .forward(12)
+        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(-133))))
+                .forward(11.5)
                 .build();
 
         Trajectory traj7 = drive.trajectoryBuilder(traj6.end())
-                .back(12)
+                .back(11.5)
                 .build();
 
         sendMessage(ACTION_PICKUP_CONE);
@@ -148,7 +148,7 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
 
         sendMessage(ACTION_GOTO_LEVEL, 4);
         drive.followTrajectory(traj0);
-        drive.turn(Math.toRadians(-47));
+        drive.turn(Math.toRadians(-43));
         sendToTelemetry("Trajectory", " moved to level 4");
 
         drive.followTrajectory(traj2);
@@ -160,19 +160,19 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         sendMessage(ACTION_GOTO_LEVEL, 5);
         sendToTelemetry("Trajectory", " moved to level 2");
 
-        drive.turn(Math.toRadians(137));
+        drive.turn(Math.toRadians(133));
         drive.followTrajectory(traj4);
         sendMessage(ACTION_GOTO_LEVEL, 6);
         sleep(250);
         sendMessage(ACTION_PICKUP_CONE);
         sendToTelemetry("Trajectory", " moved to level 0 and pick up cone");
 
-        sleep(350);
+        sleep(400);
         sendMessage(ACTION_GOTO_LEVEL, 4);
         sendToTelemetry("Trajectory", " moved to level 4");
 
         drive.followTrajectory(traj5);
-        drive.turn(Math.toRadians(-137));
+        drive.turn(Math.toRadians(-133));
         drive.followTrajectory(traj6);
         sendMessage(ACTION_RELEASE_CONE);
         sendToTelemetry("Trajectory", " release cone");
@@ -181,19 +181,19 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         sendMessage(ACTION_GOTO_LEVEL, 8);
         sendToTelemetry("Trajectory", " moved to level 2");
 
-        drive.turn(Math.toRadians(137));
+        drive.turn(Math.toRadians(133));
         drive.followTrajectory(traj4);
         sendMessage(ACTION_GOTO_LEVEL, 7);
         sleep(250);
         sendMessage(ACTION_PICKUP_CONE);
         sendToTelemetry("Trajectory", " moved to level 0 and pick up cone");
 
-        sleep(350);
+        sleep(400);
         sendMessage(ACTION_GOTO_LEVEL, 4);
         sendToTelemetry("Trajectory", " moved to level 4");
 
         drive.followTrajectory(traj5);
-        drive.turn(Math.toRadians(-137));
+        drive.turn(Math.toRadians(-133));
         drive.followTrajectory(traj6);
         sendMessage(ACTION_RELEASE_CONE);
         sendToTelemetry("Trajectory", " release cone");
@@ -207,7 +207,7 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
         sendToTelemetry("Going to parking location:", locationToPark.toString());
 
         drive.followTrajectory(
-                drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(-42.5))))
+                drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(-43))))
                         .lineTo(BaseAutoVisionOpMode.locationToPark)
                         .build());
 
