@@ -1,6 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -22,6 +27,11 @@ public class GamePadOpMode extends LinearOpMode {
     private Thread gamepad1Thread;
     private Thread gamepad2Thread;
     private Thread pickUpThread;
+    private Handler armHandler;
+    private HandlerThread mHandlerThread;
+    public static String ACTION_GOTO_LEVEL = "goto_level";
+    public static String ACTION_PICKUP_CONE = "pickup";
+    public static String ACTION_RELEASE_CONE = "release";
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap,false);
@@ -49,6 +59,33 @@ public class GamePadOpMode extends LinearOpMode {
         pickUpThread = new Thread(pickupRunnable);
         pickUpThread.start();
 
+        mHandlerThread = new HandlerThread("armThread");
+        mHandlerThread.start();
+        armHandler = new Handler(mHandlerThread.getLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+//                Log.d(TAG, "executing arm action: " + action);
+                switch (msg.what){
+                    case 999:
+//                        Log.d(TAG, "executing arm action: Open");
+                        robot.arm.openPos();
+//                        Log.d(TAG, "executing arm action: Open Done");
+                        break;
+                    case 888:
+//                        Log.d(TAG, "executing arm action: Close");
+                        robot.arm.closePos();
+//                        Log.d(TAG, "executing arm action: Close Done");
+                        break;
+                    default:
+//                        Log.d(TAG, "executing arm action going to level: " + msg.what);
+                        robot.arm.moveArmToLevel(msg.what);
+//                        Log.d(TAG, "executing arm action: going to level Done");
+                        break;
+                }
+
+            }
+        };
 
 
         // now wait for the threads to finish before returning from this method
@@ -62,6 +99,9 @@ public class GamePadOpMode extends LinearOpMode {
         robot.stopRobot();
         telemetry.addData("Gamepad", "Threads for 1 & 2 Complete");
         telemetry.update();
+
+        //quitting thread
+        mHandlerThread.quit();
     }
 
     private Runnable gp1Runnable = new Runnable() {
@@ -115,23 +155,28 @@ public class GamePadOpMode extends LinearOpMode {
                 if (gamepad2.y) {
                     telemetry.addData("GP2 Input", "Y");
                     telemetry.addData("GP2 Input level", "4 - Level 3");
-                    robot.arm.moveArmToLevel(9);
+                    sendMessage(ACTION_GOTO_LEVEL, 9);
+                    //robot.arm.moveArmToLevel(9);
                 } else if (gamepad2.x) {
                     telemetry.addData("GP2 Input", "X");
                     telemetry.addData("GP2 Input level", "3 - Level 2");
-                    robot.arm.moveArmToLevel(3);
+                    sendMessage(ACTION_GOTO_LEVEL, 3);
+                    //robot.arm.moveArmToLevel(3);
                 } else if (gamepad2.b) {
                     telemetry.addData("GP2 Input", "B");
                     telemetry.addData("GP2 Input level", "2 - Level 1");
-                    robot.arm.moveArmToLevel(2);
+                    sendMessage(ACTION_GOTO_LEVEL, 2);
+                    //robot.arm.moveArmToLevel(2);
                 } else if (gamepad2.a) {
                     telemetry.addData("GP2 Input", "A");
                     telemetry.addData("GP2 Input level", "1 - Picking Up");
-                    robot.arm.moveArmToLevel(1);
+                    sendMessage(ACTION_GOTO_LEVEL, 1);
+                    //robot.arm.moveArmToLevel(1);
                 } else if(gamepad2.right_bumper){
                     telemetry.addData("GP2 Input", "Right Bumper");
                     telemetry.addData("GP2 Input level", "0 - Home");
-                    robot.arm.moveArmToLevel(0);
+                    sendMessage(ACTION_GOTO_LEVEL, 0);
+                    //robot.arm.moveArmToLevel(0);
                 } else {
                     telemetry.addData("GP2 Input", "Unknown Ignoring");
                 }
@@ -159,16 +204,32 @@ public class GamePadOpMode extends LinearOpMode {
             while (opModeIsActive()) {
                 if (gamepad2.dpad_down) {
                     telemetry.addData("GP2 Status", "Dropping");
-                    robot.arm.closePos();
+                    sendMessage(ACTION_RELEASE_CONE);
+                    //robot.arm.closePos();
                 }
 
                 if (gamepad2.dpad_up) {
                     telemetry.addData("GP2 Status", "Picking up");
-                    robot.arm.openPos();
+                    sendMessage(ACTION_PICKUP_CONE);
+                    //robot.arm.openPos();
                 }
                 telemetry.update();
             } //end of while loop
             Log.d(TAG, "Thread 3 finishing up");
         }
     };
+
+    private void sendMessage(String action) {
+        sendMessage(action, -1);
+    }
+    private void sendMessage(String action, int level) {
+        if(ACTION_RELEASE_CONE.equals(action)){
+            armHandler.sendEmptyMessage(888);
+        } else if(ACTION_PICKUP_CONE.equals(action)){
+            armHandler.sendEmptyMessage(999);
+        } else {
+            armHandler.sendEmptyMessage(level);
+        }
+
+    }
 }
