@@ -96,7 +96,7 @@ public class Blue2OpMode extends BaseAutoVisionOpMode {
                 .lineTo(new Vector2d(10, 32))
                 .build();//9.25
 
-        Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(43))))
+        Trajectory traj2 = drive.trajectoryBuilder(traj1.end().plus(new Pose2d(0, 0, Math.toRadians(41))))
                 .forward(10.5)
                 .build();
 
@@ -104,7 +104,7 @@ public class Blue2OpMode extends BaseAutoVisionOpMode {
                 .back(10.5)
                 .build();
 
-        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(-133))))
+        Trajectory traj4 = drive.trajectoryBuilder(traj3.end().plus(new Pose2d(0, 0, Math.toRadians(-131))))
                 .strafeTo(new Vector2d(10, 60))
                 .build();
 
@@ -114,7 +114,7 @@ public class Blue2OpMode extends BaseAutoVisionOpMode {
 
         //looping code here
 
-        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(133))))
+        Trajectory traj6 = drive.trajectoryBuilder(traj5.end().plus(new Pose2d(0, 0, Math.toRadians(129))))
                 .forward(11.5)
                 .build();
 
@@ -152,7 +152,7 @@ public class Blue2OpMode extends BaseAutoVisionOpMode {
         sendMessage(ACTION_GOTO_LEVEL, 4);
         drive.followTrajectory(traj0);
         drive.followTrajectory(traj1);
-        drive.turn(Math.toRadians(43));
+        drive.turn(Math.toRadians(41));
         sendToTelemetry("Trajectory", " moved to level 4");
 
         drive.followTrajectory(traj2);
@@ -165,10 +165,10 @@ public class Blue2OpMode extends BaseAutoVisionOpMode {
         sendMessage(ACTION_GOTO_LEVEL, 5);
         sendToTelemetry("Trajectory", " moved to level 2");
 
-        drive.turn(Math.toRadians(-133));
+        drive.turn(Math.toRadians(-131));
         drive.followTrajectory(traj4);
         sendMessage(ACTION_GOTO_LEVEL, 6);
-        sleep(250);
+        sleep(300);
         sendMessage(ACTION_PICKUP_CONE);
         sendToTelemetry("Trajectory", " moved to level 0 and pick up cone");
 
@@ -177,7 +177,7 @@ public class Blue2OpMode extends BaseAutoVisionOpMode {
         sendToTelemetry("Trajectory", " moved to level 4");
 
         drive.followTrajectory(traj5);
-        drive.turn(Math.toRadians(133));
+        drive.turn(Math.toRadians(129));
         drive.followTrajectory(traj6);
         sendMessage(ACTION_RELEASE_CONE);
         sendToTelemetry("Trajectory", " release cone");
@@ -212,7 +212,7 @@ public class Blue2OpMode extends BaseAutoVisionOpMode {
         sendToTelemetry("Going to parking location:", locationToPark.toString());
 
         drive.followTrajectory(
-                drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(43))))
+                drive.trajectoryBuilder(traj7.end().plus(new Pose2d(0, 0, Math.toRadians(41))))
                         .lineTo(BaseAutoVisionOpMode.locationToPark)
                         .build());
 
