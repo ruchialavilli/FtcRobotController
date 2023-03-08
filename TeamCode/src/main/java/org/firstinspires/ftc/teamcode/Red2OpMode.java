@@ -217,6 +217,8 @@ public class Red2OpMode extends BaseAutoVisionOpMode {
                         .lineTo(BaseAutoVisionOpMode.locationToPark)
                         .build());
 
+        // always go back to zero
+        //sendMessage(ACTION_GOTO_LEVEL, 0);
         //quitting thread
         mHandlerThread.quit();
     }
